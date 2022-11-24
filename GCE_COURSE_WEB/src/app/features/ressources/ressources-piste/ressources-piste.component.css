@@ -1,0 +1,17 @@
+input:focus~.floating-label {
+    top: 6px;
+    bottom: 12px;
+    left: 20px;
+    font-size: 13px;
+    opacity: 1;
+}
+
+.floating-label {
+    position: absolute;
+    pointer-events: none;
+    left: 20px;
+    top: 18px;
+    text-transform: uppercase;
+    transition: 0.2s ease all;
+    color: #b2b2b2;
+}

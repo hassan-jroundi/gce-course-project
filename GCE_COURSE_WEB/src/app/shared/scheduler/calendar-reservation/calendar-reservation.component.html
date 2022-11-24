@@ -1,0 +1,35 @@
+<div [ngClass]="{'reservedBox': room.roomTypeName != 'piste', 'reservedBoxPiste' : room.roomTypeName === 'piste' }" (mouseenter)="onMouseEnter(booking)" (mouseleave)="onMouseLeave(booking)">
+    <div class="reservedBoxBg" (dblclick)="onDayReservation($event)">
+        {{ day.day }}
+    </div>
+    <div *ngIf="isreserved">
+        <div class="reservedBoxDx" *ngIf="isreservedDx === true">
+            &nbsp;
+        </div>
+        <div class="reservedBoxCx" *ngIf="isreservedCx === true">
+            &nbsp;
+        </div>
+        <div class="reservedBoxSx" *ngIf="isreservedSx === true">
+            &nbsp;
+        </div>
+        <div class="reservedBox0" *ngIf="reservedSize == 0">
+            &nbsp;
+        </div>
+        <div class="reservedBox1" *ngIf="reservedSize > 0 && reservedSize < 6">
+            &nbsp;
+        </div>
+        <div class="reservedBox6" *ngIf="reservedSize >= 6 && reservedSize < 11">
+            &nbsp;
+        </div>
+        <div class="reservedBox11" *ngIf="reservedSize >= 11 && reservedSize < 16">
+            &nbsp;
+        </div>
+        <div class="reservedBox16" *ngIf="reservedSize >= 16 && reservedSize < 20">
+            &nbsp;
+        </div>
+        <div class="reservedBox20" *ngIf="reservedSize == 20">
+            &nbsp;
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

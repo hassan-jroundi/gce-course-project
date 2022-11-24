@@ -1,0 +1,79 @@
+.reservedBox {
+    background-color: rgba(22, 64, 85, 0.03);
+    position: relative;
+    height: 25px;
+}
+
+.reservedBoxPiste {
+    background-color: rgba(22, 64, 85, 0.03);
+    position: relative;
+    height: 35px;
+}
+
+.reservedBoxBg {
+    position: absolute;
+    width: 36px;
+    padding-top: 4px;
+    font-size: 12px;
+}
+
+:host-context(tr.rows:not(:hover)) .reservedBoxBg {
+    display: none;
+}
+
+:host-context(tr.rows:hover) .reservedBoxBg {
+    display: block;
+}
+
+.reservedBoxCx {
+    height: 25px;
+    background-color: rgb(151, 37, 19);
+}
+
+.reservedBoxSx {
+  height: 25px;
+  /*width: 15px;*/
+  /*float: left;*/
+  background-color: rgb(151, 37, 19);
+}
+
+.reservedBoxDx {
+  height: 25px;
+  /*width: 15px;*/
+  /*float: left;*/
+  background-color: rgb(151, 37, 19);
+}
+
+.reservedBox0 {
+    height: 35px;
+    background-color: rgba(22, 64, 85, 0.03) !important;
+}
+
+.reservedBox1 {
+    height: 35px;
+    background-color: rgb(192, 178, 131) !important;
+}
+
+.reservedBox6 {
+    height: 35px;
+    background-color: rgb(161, 145, 81) !important;
+}
+
+.reservedBox11 {
+    height: 35px;
+    background-color: rgb(141, 121, 41) !important;
+}
+
+.reservedBox16 {
+    height: 35px;
+    background-color: rgb(211, 112, 51) !important;
+}
+
+.reservedBox20 {
+    height: 35px;
+    background-color: rgb(151, 37, 19) !important;
+}
+
+.clearfix {
+    clear: both;
+}

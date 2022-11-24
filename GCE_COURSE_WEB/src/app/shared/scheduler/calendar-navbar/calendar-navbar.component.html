@@ -1,0 +1,35 @@
+<div>
+  <div>
+    <br>
+    <div>
+      <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-4">
+          <strong style="font-size: 16px;">{{ currvalues?.dayWeekName }} {{
+            currvalues?.day }} {{ currvalues?.monthName }} {{
+            currvalues?.year }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+        </div>
+        <div class="ui-g-12 ui-md-6 left-align">
+          <strong class="panelStatusbar" *ngIf="statusbar">{{
+            statusbar.name }}&nbsp;</strong>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="ui-g form-group" style="background:rgba(151, 145, 81, 0.35);">
+      <div class="ui-g-12 ui-md-2 left-align">
+        <p-calendar [(ngModel)]="datpicker" dateFormat="dd/mm/yy" showButtonBar="true"
+                    (ngModelChange)="onPickerChange($event)" showIcon="true"></p-calendar>
+      </div>
+      <div class="ui-g-12 ui-md-10 right-align">
+
+        <button icon="fa fa-angle-double-left" iconPos="left" class="rougebutton" pButton label="Mois
+                    précédent" type="button" (click)="onPrevMonth()">
+        </button>
+        <button icon="fa fa-angle-double-right" iconPos="right" class="rougebutton" pButton label="Mois
+                    suivant" type="button" (click)="onNextMonth()">
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

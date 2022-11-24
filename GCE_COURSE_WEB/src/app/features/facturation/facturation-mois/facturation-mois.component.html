@@ -1,0 +1,227 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+<div class="card panel-default-header">
+    <p-panel header="Filtre de recherche" [toggleable]="true" [collapsed]="searchDisplay">
+        <br>
+        <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-3 left-align">
+                <span class="ui-float-label">
+                    <span class="foalting-label">
+                        Choisissez le mois
+                    </span>
+                <p-calendar [(ngModel)]="dateValue" view="month" dateFormat="mm/yy" [yearNavigator]="true" showIcon="yes" yearRange="2000:2030">
+                </p-calendar>
+                </span>
+                <br><br>
+            </div>
+            <div class="ui-g-12 ui-md-9 left-align">
+
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label left-align">
+                    <p-progressSpinner *ngIf="loading" [style]="{width: '30px',
+                        height:
+                        '30px'}" styleClass="custom-spinner" strokeWidth="8"
+                                       animationDuration=".9s"></p-progressSpinner>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-6 right-align">
+                <span class="ui-float-label">
+                    <button icon="fa fa-search" class="rougebutton" pButton
+                            label="Chercher" type="button" (click)="doSearch()">
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br>
+    </p-panel>
+    <br>
+    <div class="panel-secondary-header">
+        <p-panel header="Hébergement Personne" [toggleable]="true" *ngIf="hebergementPersonneDisplay">
+            <br>
+            <p-table [style]="{width: '98%', margin: '0 auto'}" [reorderableColumns]="true" sortMode="multiple" dataKey="id" [value]="personneLits" [(selection)]="selectedPersonneLits" [paginator]="true" [rows]="10">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="idReservation" style="width: 160px;">N° Réservation
+                            <p-sortIcon field="idReservation"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomLit" style="width: 110px;">N° Lit
+                            <p-sortIcon field="nomLit"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomConcerne">Nom de la Personne
+                            <p-sortIcon field="nomConcerne"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dateDebut" style="width: 130px;">Du
+                            <p-sortIcon field="dateDebut"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dateFin" style="width: 130px;">Au
+                            <p-sortIcon field="dateFin"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="libelleStatut">Statut
+                            <p-sortIcon field="libelleStatut"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomPersonneAFacturer">Personne à facturer
+                            <p-sortIcon field="nomPersonneAFacturer"></p-sortIcon>
+                        </th>
+                        <th style="width: 125px"></th>
+                        <th style="width: 7%;"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-personneLit>
+                    <tr style="text-align: center;" [pSelectableRow]="personneLit" class="tr-facturation">
+                        <td class="td-bolder">{{ personneLit?.idReservation }}</td>
+                        <td class="td-bolder">{{ personneLit?.nomLit }}</td>
+                        <td class="td-bolder">{{ personneLit?.nomConcerne }}</td>
+                        <td class="td-bolder">{{ personneLit?.dateDebut | date : "dd-MM-yyyy" }}</td>
+                        <td class="td-bolder">{{ personneLit?.dateFin | date : "dd-MM-yyyy" }}</td>
+                        <td class="td-bolder-payee" *ngIf="personneLit?.libelleStatut == 'Payée'">{{ personneLit?.libelleStatut }}</td>
+                        <td class="td-bolder-c-payee" *ngIf="personneLit?.libelleStatut == 'En cours de paiement'">{{ personneLit?.libelleStatut }}</td>
+                        <td class="td-bolder-n-payee" *ngIf="personneLit?.libelleStatut == 'Non payée'">{{ personneLit?.libelleStatut }}</td>
+                        <td class="td-bolder">{{ personneLit?.nomPersonneAFacturer }}</td>
+                        <td class="td-bolder" style="text-align: center; width: 10%;">
+                            <span title="Télécharger la facture" class="fa fa-download fa-lg pointer fa-vert-icon" *ngIf="personneLit?.libelleStatut != 'Non payée'" (click)="telechargerFacture(personneLit)"></span>&nbsp;
+                            <span title="Mettre en payé" class="fa fa-money-bill fa-lg pointer fa-orange-icon" *ngIf="personneLit?.libelleStatut === 'En cours de paiement'" (click)="openModePaiementDisplay(personneLit)"></span>
+                            <!--              <span title="Facturer" class="fa fa-file-invoice fa-lg pointer fa-orange-icon"-->
+                            <!--                 *ngIf="personneLit?.libelleStatut === 'Non payée'" (click)="openModePaiementDisplay(personneLit)"></span>-->
+                        </td>
+                        <td class="td-bolder">
+                            <p-tableCheckbox *ngIf="personneLit?.libelleStatut ==
+                                'Non payée'" [value]="personneLit" style="width: 50px;">
+                            </p-tableCheckbox>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    Résultat : {{ personneLits?.length }}
+                </ng-template>
+            </p-table>
+            <br>
+        </p-panel>
+    </div>
+    <br>
+    <div class="panel-secondary-header">
+        <p-panel header="Hébergement Cheval" [toggleable]="true" *ngIf="hebergementChevalDisplay">
+            <br>
+            <p-table [style]="{width: '98%', margin: '0 auto'}" [value]="chevalBoxs" dataKey="id" [(selection)]="selectedChevalBoxs">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="idReservation" style="width: 160px;">N° Réservation
+                            <p-sortIcon field="idReservation"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomBox" style="width: 110px;">N° Box
+                            <p-sortIcon field="nomBox"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomConcerne">Nom du Cheval
+                            <p-sortIcon field="nomConcerne"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dateDebut" style="width: 130px;">Du
+                            <p-sortIcon field="dateDebut"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dateFin" style="width: 130px;">Au
+                            <p-sortIcon field="dateFin"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="libelleStatut">Statut
+                            <p-sortIcon field="libelleStatut"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomPersonneAFacturer">Personne à facturer
+                            <p-sortIcon field="nomPersonneAFacturer"></p-sortIcon>
+                        </th>
+                        <th style="width: 10%;"></th>
+                        <th style="width: 7%;"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-chevalBox>
+                    <tr style="text-align: center;" class="tr-facturation" [pSelectableRow]="chevalBox">
+                        <td class="td-bolder">{{ chevalBox?.idReservation }}</td>
+                        <td class="td-bolder">{{ chevalBox?.nomBox }}</td>
+                        <td class="td-bolder">{{ chevalBox?.nomConcerne }}</td>
+                        <td class="td-bolder">{{ chevalBox?.dateDebut | date : "dd-MM-yyyy" }}</td>
+                        <td class="td-bolder">{{ chevalBox?.dateFin | date : "dd-MM-yyyy" }}</td>
+                        <td class="td-bolder-payee" *ngIf="chevalBox?.libelleStatut == 'Payée'">{{ chevalBox?.libelleStatut }}</td>
+                        <td class="td-bolder-c-payee" *ngIf="chevalBox?.libelleStatut == 'En cours de paiement'">{{ chevalBox?.libelleStatut }}</td>
+                        <td class="td-bolder-n-payee" *ngIf="chevalBox?.libelleStatut == 'Non payée'">{{ chevalBox?.libelleStatut }}</td>
+                        <td class="td-bolder">{{ chevalBox?.nomPersonneAFacturer}}</td>
+                        <td class="td-bolder" style="text-align: center; width: 10%;">
+                            <span title="Télécharger la facture" class="fa fa-download fa-lg pointer fa-vert-icon" *ngIf="chevalBox?.libelleStatut != 'Non payée'" (click)="telechargerFacture(chevalBox)"></span>&nbsp;
+                            <span title="Mettre en payé" class="fa fa-money-bill fa-lg pointer fa-orange-icon" *ngIf="chevalBox?.libelleStatut === 'En cours de paiement'" (click)="openModePaiementDisplay(chevalBox)"></span>
+                        </td>
+                        <td class="td-bolder">
+                            <p-tableCheckbox *ngIf="chevalBox?.libelleStatut ==
+                                'Non payée'" [value]="chevalBox" style="width: 50px;">
+                            </p-tableCheckbox>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    Résultat : {{ chevalBoxs?.length }}
+                </ng-template>
+            </p-table>
+            <br>
+            <!--      <div class="ui-g form-group">-->
+            <!--        <div class="ui-g-12 ui-md-12 right-align">-->
+            <!--                    <span class="ui-float-label">-->
+            <!--                        <button class="rougebutton" pButton-->
+            <!--                                label="Mettre en payé" type="button">-->
+            <!--                        </button>-->
+            <!--                    </span>-->
+            <!--        </div>-->
+            <!--      </div>-->
+        </p-panel>
+    </div>
+    <br>
+    <div class="ui-g form-group" *ngIf="detailReservations.length > 0">
+        <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                        <button icon="fa fa-file-invoice" [disabled]="selectedPersonneLits.length == 0 && selectedChevalBoxs.length == 0"
+                                class="rougebutton" pButton label="Facturer"
+                                type="button" (click)="facturer()">
+                        </button>
+                    </span>
+        </div>
+    </div>
+</div>
+<div class="ui-g form-group" *ngIf="hebergementPersonneDisplay &&
+    hebergementChevalDisplay">
+    <div class="ui-g-12 ui-md-12 center-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-undo" class="rougebutton" pButton
+                    label="Réinitialiser" type="button"
+                    (click)="reset()">
+            </button>
+        </span>
+    </div>
+</div>
+
+<p-dialog [(visible)]="modePaiementDisplay" showEffect="fade" [style]="{width:'30%'}">
+    <p-header>Mode de paiement</p-header>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [options]="modePaiementList"
+                  [autoDisplayFirst]="false" [showClear]="true"
+                  [filter]="false"
+                  optionLabel="name"
+                  optionValue="code"
+                  name="raisonSociale"
+                  id="raisonSociale"
+                  [(ngModel)]="modePaiementCatched"></p-dropdown>
+                <span class="foalting-label">Type</span>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-file-invoice"
+                        class="rougebutton" pButton label="Mettre en payé" type="button"
+                        [disabled]="!modePaiementCatched"
+                        (click)="mettreEnPaye()">
+                </button>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

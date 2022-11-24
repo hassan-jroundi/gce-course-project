@@ -1,0 +1,910 @@
+/* Imports */
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@font-face {
+  font-family: Berthold-Akzidenz;
+  src: url(assets/fonts/berthold-akzidenz-grotesk-be-condensed.ttf) format("truetype");
+}
+
+
+/* Extra large devices (large laptops and desktops, 1200px or more) */
+
+@media only screen and (min-width: 1200px) {
+}
+
+
+/* Large devices (laptops/desktops, 1200px or less) */
+
+@media only screen and (max-width: 1200px) {
+}
+
+
+/* Medium devices (landscape tablets, 992px or less) */
+
+@media only screen and (max-width: 992px) {
+  .logo-large {
+    display: none;
+  }
+
+  .logo-small {
+    display: block;
+    height: 50px;
+    width: 50px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .ng-content {
+    padding-left: 10px;
+  }
+
+  .ng-header-left {
+    width: 100px;
+  }
+}
+
+
+/* Small devices (portrait tablets and large phones, 768px or less) */
+
+@media only screen and (max-width: 768px) {
+}
+
+
+/* Extra small devices (phones, 600px or less) */
+
+@media only screen and (max-width: 600px) {
+}
+
+@keyframes p-progress-spinner-color {
+  100%,
+  0% {
+    stroke: rgb(151, 37, 19);
+  }
+  40% {
+    stroke: rgb(120, 149, 48);
+  }
+  66% {
+    stroke: rgb(125, 110, 52);
+  }
+  80%,
+  90% {
+    stroke: rgb(68, 71, 74);
+  }
+}
+
+
+/* Theme */
+
+.theme-default {
+  --main-background: white;
+  --header-footer-color: #ffffff;
+  --header-footer-bg-color: rgb(68, 71, 74);
+  --header-footer-bg-color2: rgb(125, 110, 52);
+  --menubar-background: rgb(68, 71, 74);
+  --menubar-color: #ffffff;
+  --active-menu-color: rgb(161, 145, 81);
+}
+
+
+/* Balises */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+h3 {
+  background-color: rgb(80, 148, 183);
+  color: white;
+  text-align: center;
+}
+
+a {
+  cursor: pointer;
+}
+
+label {
+  color: black !important;
+  font-size: 14px;
+}
+
+
+/* NG-Composants */
+
+.ng-main {
+  background-color: var(--main-background);
+  height: 100%;
+}
+
+.ng-header,
+.ng-footer {
+  height: 52px;
+  background-image: -webkit-gradient(linear, left top, right top, from(var(--header-footer-bg-color)), to(var(--header-footer-bg-color2)));
+  color: var(--header-footer-color);
+}
+
+.ng-header-right {
+  height: 50px;
+}
+
+.ng-header a {
+  color: var(--header-footer-color);
+}
+
+.ng-header a:hover {
+  color: var(--header-footer-color);
+}
+
+.ng-header .pi {
+  color: #000000;
+}
+
+.ng-footer div {
+  text-align: center;
+  padding: 10px;
+}
+
+.ng-content {
+  overflow: auto;
+  height: calc(100% - 52px);
+  padding: 10px;
+  padding-left: 240px;
+}
+
+.ng-content .ui-card {
+  min-height: 100%;
+  background: #000000;
+}
+
+
+/* UI-Composants */
+
+.ui-panel {
+  background-color: rgba(120, 149, 48, 0.20);
+}
+
+.p-datatable-scrollable-body {
+  overflow-y: scroll;
+}
+
+.ui-button {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+p-button {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.ui-growl {
+  top: auto;
+  bottom: 0px;
+}
+
+.ui-datepicker .ui-calendar td span,
+.ui-datepicker .ui-calendar td a {
+  padding: 0px;
+}
+
+
+/* .ui-datatable.borderless thead th,
+.ui-datatable.borderless tbody,
+.ui-datatable.borderless tbody tr,
+.ui-datatable.borderless tbody td {
+    border-style: none;
+} */
+
+.ui-datatable thead th {
+  border: hidden;
+}
+
+
+/* .ui-calendar .ui-datepicker {
+    height: 120px !important;
+    font-size: smaller !important;
+} */
+
+.ui-table-scrollable-header-box {
+  margin-right: 17px !important;
+  /* font-family: Berthold-Akzidenz; */
+}
+
+:host ::ng-deep .newfont-styles .ui-toast {
+  display: flex;
+  width: 70%;
+}
+
+:host ::ng-deep .customDialog {
+  background-color: white !important;
+  width: 92vw !important;
+  box-shadow: 0px 20px 20px #D8DDE680;
+  border: 1px solid rgb(231, 231, 231);
+}
+
+.ui-fieldset .ui-state-default {
+  background-color: black;
+}
+
+.ui-tabview-title {
+  color: rgb(80, 148, 183) !important;
+}
+
+
+/* Divers */
+
+.testosa {
+  border: none !important;
+}
+
+.dialog-piste {
+  width: 80%;
+  height: 90%;
+}
+
+.panel-container-content div.ui-panel-content {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.panel-container-header div.ui-panel-titlebar {
+  background-color: rgb(160, 141, 82);
+  color: white;
+  text-align: center;
+}
+
+.panel-default-header div.ui-panel-titlebar {
+  background-color: white;
+  color: rgb(80, 148, 183);
+  font-size: large;
+}
+
+.panel-secondary-header div.ui-panel-titlebar {
+  background-color: white;
+  color: rgb(211, 112, 51);
+  font-size: large;
+}
+
+.success-toast .ui-toast-message-content {
+  font-family: 'Courier New', Courier, monospace;
+  background: rgb(120, 149, 48);
+}
+
+.info-toast .ui-toast-message-content {
+  font-family: 'Courier New', Courier, monospace;
+  background: rgb(13, 115, 231);
+}
+
+.warn-toast .ui-toast-message-content {
+  font-family: 'Courier New', Courier, monospace;
+  background: rgb(235, 187, 53);
+}
+
+.error-toast .ui-toast-message-content {
+  font-family: 'Courier New', Courier, monospace;
+  background: rgb(151, 37, 19);
+}
+
+.hidden-menu-content {
+  padding-left: 10px;
+}
+
+.icon {
+  line-height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.prime-button {
+  width: 150px !important;
+}
+
+.overview-box-1 .ui-card-body {
+  background-color: #F39611;
+}
+
+.overview-box-2 .ui-card-body {
+  background-color: #326DDF;
+}
+
+.overview-box-3 .ui-card-body {
+  background-color: #E02364;
+}
+
+.overview-box-4 .ui-card-body {
+  background-color: #7DC931;
+}
+
+.color-red {
+  color: red;
+}
+
+.header-breadcrumb {
+  margin-bottom: 10px;
+  /* background-color: rgb(219, 219, 219) !important; */
+}
+
+.login-panel,
+.user-regisration {
+  height: 100%;
+  background-image: radial-gradient(var(--header-footer-bg-color) 40%, var(--header-footer-bg-color2));
+}
+
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: red;
+  border-radius: 10px;
+}
+
+.login-logo {
+  height: 100%;
+  width: 100%;
+}
+
+.toggle-menu-button {
+  text-align: center;
+  height: 52px;
+  width: 50px;
+  background-color: rgb(68, 71, 74);
+}
+
+.toggle-menu-button .icon {
+  padding: 0;
+  color: var(--menubar-color) !important;
+}
+
+.logo-large {
+  display: block;
+  height: 50px;
+  width: 180px;
+}
+
+.logo-small {
+  display: none;
+}
+
+.user-name {
+  font-size: 15px;
+  padding: 5px;
+}
+
+.notification-message {
+  min-height: 25px;
+  width: 200px;
+  padding: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.np-loader {
+  position: fixed;
+  z-index: 1100;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.np-loader:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.fa-fw {
+  width: 50px;
+}
+
+.right {
+  float: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.left {
+  float: left;
+}
+
+.notifications-header {
+  background-color: rgb(125, 110, 52);
+  color: white;
+  font-size: 16px !important;
+  text-align: center;
+  cursor: none;
+}
+
+.np-menubar {
+  background-color: var(--menubar-background) !important;
+  height: 100%;
+  overflow: auto;
+  border: none !important;
+  padding: 0px !important;
+  margin-top: 52px;
+  width: 230px;
+}
+
+.np-sub-menu {
+  padding: 0px;
+  width: 100%;
+  list-style: none;
+  position: relative;
+}
+
+.np-menu {
+  padding: 5px;
+  margin: 0px;
+}
+
+.np-menu li a {
+  padding: 7px;
+  color: var(--menubar-color);
+  display: block;
+  text-decoration: none !important;
+  position: relative;
+}
+
+.np-menu li a:hover,
+.np-menu .active {
+  color: var(--active-menu-color);
+  cursor: pointer;
+}
+
+.np-menu .fa {
+  width: 25px;
+  text-align: center;
+}
+
+.np-menu li ul {
+  display: block;
+}
+
+.np-menu li ul::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 1;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--menubar-color);
+}
+
+.np-menubar {
+  box-shadow: none !important;
+}
+
+.extra-page-footer {
+  position: relative;
+  bottom: 0px;
+  padding: 10px;
+  height: 50px;
+  text-align: center;
+  width: 100%;
+  color: white;
+}
+
+.ui-messages ul {
+  display: inline-block !important;
+}
+
+.inactif {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.partiel {
+  background-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+.nonpayee {
+  background-color: rgba(151, 37, 19, 0.80) !important;
+  color: white !important;
+}
+
+.payee {
+  background-color: rgba(120, 149, 48, 0.80) !important;
+  color: white !important;
+}
+
+.disabledinput.ui-inputtext {
+  pointer-events: none;
+  background-color: rgb(233, 233, 233);
+}
+
+.enabledinput.ui-inputtext {
+  background-color: white;
+}
+
+.disableddropdown {
+  pointer-events: none;
+  background-color: rgb(247, 247, 247);
+}
+
+.td-bolder {
+  border: hidden !important;
+  font-weight: bold;
+  color: #000000;
+}
+
+.td-bolder-payee {
+  border: hidden !important;
+  color: rgb(101, 129, 28);
+  font-weight: bolder;
+}
+
+.td-bolder-active {
+  border: hidden !important;
+  color: rgb(101, 129, 28);
+  font-weight: bolder;
+}
+
+.td-bolder-desactive {
+  border: hidden !important;
+  color: rgb(151, 37, 19);
+  font-weight: bolder;
+}
+
+.td-bolder-p-payee {
+  border: hidden !important;
+  color: rgb(64, 63, 112);
+  font-weight: bolder;
+}
+
+.td-bolder-c-payee {
+  border: hidden !important;
+  color: rgb(64, 63, 112);
+  font-weight: bolder;
+}
+
+.td-bolder-n-payee {
+  border: hidden !important;
+  color: rgb(151, 37, 19);
+  font-weight: bolder;
+}
+
+.tr-facturation {
+  text-align: center !important;
+  border: hidden !important;
+  background-color: rgb(185, 195, 204, 0.15) !important;
+}
+
+.tr-facturation-bis {
+  text-align: center !important;
+  border: hidden !important;
+  background-color: rgb(95, 85, 72, 0.04) !important;
+}
+
+#something:hover {
+  background-color: rgba(185, 185, 185, 0.20) !important;
+}
+
+#something {
+  background-color: #cccccc;
+}
+
+#something2 {
+  background-color: white;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centertest {
+  margin: auto;
+  width: 25%;
+  height: max-content;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.50);
+  border-radius: 25px;
+}
+
+.right {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.ui-button.goldbutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(166, 151, 102) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(166, 151, 102) !important;
+}
+
+.ui-button.goldbutton i {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+
+.dialogbutton {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 5;
+  border: 3px solid #73AD21;
+}
+
+.ui-button.grisbutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(121, 128, 132) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(121, 128, 132) !important;
+}
+
+.ui-button.bleubutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(80, 148, 183) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(80, 148, 183) !important;
+}
+
+.ui-button.vertbutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(129, 149, 48) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(129, 149, 48) !important;
+}
+
+.ui-button.jaunebutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(235, 187, 53) !important;
+  color: rgb(68, 71, 74) !important;
+  margin-right: 8px !important;
+  border-color: rgb(235, 187, 53) !important;
+}
+
+.ui-button.rougebutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(174, 54, 54) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(174, 54, 54) !important;
+}
+
+.ui-button.orangebutton {
+  width: fit-content !important;
+  /* float: left !important; */
+  background-color: rgb(211, 112, 54) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(211, 112, 54) !important;
+}
+
+.ui-button.legend0 {
+  width: 70px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgba(22, 64, 85, 0.03) !important;
+  color: rgb(95, 85, 72) !important;
+  margin-right: 8px !important;
+  border-color: rgb(185, 195, 204) !important;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ui-button.legend1 {
+  width: 80px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgb(192, 178, 131) !important;
+  color: rgb(95, 85, 72) !important;
+  margin-right: 8px !important;
+  border-color: rgb(185, 195, 204) !important;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ui-button.legend6 {
+  width: 80px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgb(161, 145, 81) !important;
+  color: rgb(95, 85, 72) !important;
+  margin-right: 8px !important;
+  border-color: rgb(185, 195, 204) !important;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ui-button.legend11 {
+  width: 80px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgb(141, 121, 41) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(141, 121, 41) !important;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ui-button.legend16 {
+  width: 80px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgb(211, 112, 51) !important;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(211, 112, 51) !important;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ui-button.legend20 {
+  width: 70px !important;
+  height: 35px !important;
+  float: right !important;
+  background-color: rgb(151, 37, 19) !important;;
+  color: white !important;
+  margin-right: 8px !important;
+  border-color: rgb(151, 37, 19) !important;;
+  cursor: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.error-box {
+  max-width: 900px;
+  margin: 0 auto;
+  height: 100%;
+  overflow: auto;
+  color: var(--header-footer-bg-color2)
+}
+
+.default-label {
+  font-size: medium;
+  color: black;
+}
+
+.image {
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  background-image: url('assets/images/bg-home.png');
+  background-attachment: fixed;
+}
+
+.fa-vert-icon {
+  color: rgb(120, 149, 48);
+  cursor: pointer;
+}
+
+.fa-orange-icon {
+  color: rgb(211, 112, 54);
+  cursor: pointer;
+}
+
+.fa-rouge-icon {
+  color: rgb(151, 37, 19);
+  cursor: pointer;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.donut-inner {
+  margin-top: -75px;
+  margin-bottom: 100px;
+}
+
+.donut-inner h5 {
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.donut-inner span {
+  font-size: 12px;
+}
+
+.nombre-reservation-text {
+  color: rgb(151, 37, 19);
+  font-size: large;;
+}
+
+.center-i {
+  margin-top: 7px;
+}
+
+input:disabled {
+  pointer-events: none;
+  background-color: white;
+  color: #000000 !important;
+}
+
+.custom-toast .ui-toast {
+  /*position: fixed;*/
+  /*!*top: 20%;*!*/
+  /*left: 50%;*/
+  /*right: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  width: 500px !important;
+  /*height: 400px !important;*/
+}
+
+.custom-toast .ui-toast-message-content {
+  font-size: large;
+  /*font-weight: bold;*/
+}
+
+.user-name-header {
+  cursor: pointer;
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: small;
+}
+
+/*.bg-img*/
+/*{*/
+/*  background-image: url('assets/images/bg-home.png');*/
+/*  background-position: center;*/
+/*  background-repeat: no-repeat;*/
+/*}*/
+
+.bg-img{
+  min-height: 100vh;
+  width: 100%;
+  background: url('assets/images/bg-dash.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

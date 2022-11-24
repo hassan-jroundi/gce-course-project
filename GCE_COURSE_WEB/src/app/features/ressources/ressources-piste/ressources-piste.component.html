@@ -1,0 +1,129 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+    <p-panel header="Liste des pistes">
+        <br>
+        <p-table sortMode="multiple" [style]="{width: '70%', margin: '0 auto'}" [value]="pistes" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="code">Code Piste
+                        <p-sortIcon field="code"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="prix">Prix par heure
+                        <p-sortIcon field="prix"></p-sortIcon>
+                    </th>
+                    <th *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'" style="width: 130px;"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-piste>
+                <tr>
+                    <td style="text-align: center;">{{ piste.nom }}</td>
+                    <td style="text-align: center;"> {{ piste.prix }} Dhs (<a (click)="getHistoriquePrix(piste)">Historique</a>)</td>
+                    <td *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'" class="align-center" style="text-align: center;">
+                        <span class="fa fa-pen fa-lg pointer crud-buttons fa-vert-icon" title="Modifier" (click)="editItem(piste)"></span>&nbsp;
+                        <span class="fa fa-trash fa-lg pointer fa-rouge-icon" title="Supprimer" (click)="deleteItem(piste)"></span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <br>
+        <br>
+        <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-12 right-align">
+                <span class="ui-float-label">
+                    <button icon="fa fa-plus" class="rougebutton" pButton label="Ajouter" type="button"
+                        (click)="addItem()"></button>
+                </span>
+            </div>
+        </div>
+    </p-panel>
+</div>
+
+<p-dialog [(visible)]="display" showEffect="fade" [style]="{width: '50%'}" (onHide)="reset()">
+    <p-header> {{ action }} une piste</p-header>
+    <br>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="text" id="codePiste" value="" pInputText
+                    [(ngModel)]="codePiste">
+                    <label>Code Piste</label>
+            </span>
+            <br>
+        </div>
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="number" id="prixPiste" value="" pInputText
+                    [(ngModel)]="prixUnitairePiste" step="1" />
+                    <label>Prix Unitaire</label>
+            </span>
+            <br>
+        </div>
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="number" id="prixPiste" value="" pInputText
+                    [(ngModel)]="prixForfaitairePiste" step="10" />
+                    <label>Prix Forfaitaire</label>
+            </span>
+            <br>
+        </div>
+        <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button" [disabled]="!codePiste || !prixUnitairePiste || !prixForfaitairePiste"
+                    (click)="saveItem()">
+                </button>
+                <button icon="fa fa-undo" class="rougebutton" pButton label="Réinitialiser" type="button"
+                    (click)="reset()">
+                </button>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="historiqueDisplay" showEffect="fade" [style]="{width: '60%'}" (onHide)="closeHistoriqueDialog()">
+    <p-header> Historique de prix de la piste {{ codePiste }}</p-header>
+    <br>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="prixActuel" class="ui-md-12" type="text" pInputText class="disabledinput" [(ngModel)]="prixActuel" />
+                <label>Prix actuel</label>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="dateDebut" class="ui-md-12" type="text" pInputText class="disabledinput" [(ngModel)]="dateDebutPrixActuel" />
+                <label>Date début</label>
+            </span>
+        </div>
+    </div>
+    <br>
+    <p-table [style]="{width: '70%', margin: '0 auto'}" [value]="prixPistes" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Du</th>
+                <th>Au</th>
+                <th>Montant</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prixPiste>
+            <tr>
+                <td style="text-align: center;">{{ prixPiste?.dateDebut }}</td>
+                <td style="text-align: center;">{{ prixPiste?.dateFin }}</td>
+                <td style="text-align: center;">{{ prixPiste?.montant }} Dhs</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                (click)="closeHistoriqueDialog()"></button>
+        </span>
+    </div>
+
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi
+                            pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

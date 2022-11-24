@@ -1,0 +1,404 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+    <p-panel header="Liste des bâtiments">
+        <br>
+        <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-5">
+                <span class="ui-float-label">
+                <p-dropdown [options]="immeubles" [autoDisplayFirst]="false" [filter]="false" optionLabel="nom"
+                            optionValue="id" (onChange)="onImmeubleChoosen($event)"></p-dropdown>
+                <label>Bâtiment</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1">
+                <span class="fa fa-pen fa-lg pointer crud-buttons fa-vert-icon center-i" title="Modifier" *ngIf="immeubleOpened && (profilUtilisateurConnecte == 'ADM'  || profilUtilisateurConnecte == 'GES')" (click)="editImmeuble(immeubleOpened)"></span>&nbsp;
+                <span class="fa fa-trash fa-lg pointer fa-rouge-icon center-i" title="Supprimer" *ngIf="immeubleOpened && (profilUtilisateurConnecte == 'ADM'   || profilUtilisateurConnecte == 'GES')" (click)="deleteImmeuble(immeubleOpened)"></span>
+            </div>
+            <div class="ui-g-12 ui-md-5">
+                <span class="ui-float-label" *ngIf="actionAjouter == 'Chambre'
+                    || chambreOpened">
+                    <p-dropdown [options]="chambres" [autoDisplayFirst]="false"
+                                [filter]="false" optionLabel="nom" optionValue="id"
+                                (onChange)="onChambreChoosen($event)"></p-dropdown>
+                    <label>Chambre</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1">
+                <span class="fa fa-pen fa-lg pointer crud-buttons fa-vert-icon center-i" title="Modifier" *ngIf="chambreOpened  && (profilUtilisateurConnecte == 'ADM'   || profilUtilisateurConnecte == 'GES')" (click)="editChambre(chambreOpened)"></span>&nbsp;
+                <span class="fa fa-trash fa-lg pointer fa-rouge-icon center-i" title="Supprimer" *ngIf="chambreOpened  && (profilUtilisateurConnecte == 'ADM'   || profilUtilisateurConnecte == 'GES')" (click)="deleteChambre(chambreOpened)"></span>
+            </div>
+        </div>
+        <br><br>
+        <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-6">
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <input type="text" id="codeChambreInput" value="" pInputText
+                           style="pointer-events:none;"
+                           [(ngModel)]="codeChambreInput">
+                    <label for="codeChambreInput">Code chambre</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1" *ngIf="chambreOpened">
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <input type="text" id="nbrLitsChambreInput" value=""
+                           pInputText style="pointer-events:none;"
+                           [(ngModel)]="nbrLitsChambreInput">
+                    <label for="nbrLitsChambreInput">Nombre de lits</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1 left-align center-i" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <span class="fa fa-history fa-lg pointer fa-vert-icon"
+                          *ngIf="chambreOpened" title="Historique des changements
+                        de Lits" (click)="getHistoriqueChangementLits()"></span>
+                </span>
+                <br>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <input type="text" id="codeChambreInput" value="" pInputText
+                           style="pointer-events:none;"
+                           [(ngModel)]="prixUnitaireLitInput">
+                    <label for="codeChambreInput">Prix Unitaire</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1 left-align center-i" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <span class="fa fa-history fa-lg pointer fa-vert-icon"
+                          *ngIf="chambreOpened" title="Historique des changements
+                        du prix unitaire" (click)="getHistoriquePrixUnitaire()"></span>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <input type="text" id="nbrLitsChambreInput" value=""
+                           pInputText style="pointer-events:none;"
+                           [(ngModel)]="prixForfaitaireLitInput">
+                    <label for="nbrLitsChambreInput">Prix Forfaitaire</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-1 left-align center-i" *ngIf="chambreOpened">
+                <span class="ui-float-label">
+                    <span class="fa fa-history fa-lg pointer fa-vert-icon"
+                          *ngIf="chambreOpened" title="Historique des changements
+                        du prix forfaitaire" (click)="getHistoriquePrixForfaitaire()"></span>
+                </span>
+                <br>
+            </div>
+        </div>
+        <br>
+
+        <p-table [style]="{width: '70%', margin: '0 auto'}" *ngIf="tableDisplay" [value]="lits" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Code Lit</th>
+                    <th>Statut</th>
+                    <th *ngIf="profilUtilisateurConnecte == 'ADM'" style="width: 130px;"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-lit>
+                <tr [ngClass]="{'inactif': lit?.isActif == false}">
+                    <td style="text-align: center;">{{ lit?.nom }}</td>
+                    <td style="text-align: center;">{{ lit?.isActif == true ? 'Activé' : 'Désactivé' }}</td>
+                    <td class="align-center" style="text-align: center;" *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'">
+                        <span class="fa fa-lg fa-pen pointer crud-buttons
+                            fa-vert-icon" title="Modifier" (click)="editLit(lit)"></span>&nbsp;
+                        <span class="fa fa-lg fa-trash pointer fa-rouge-icon" title="Supprimer" (click)="deleteLit(lit)"></span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <br>
+        <br>
+        <div class="ui-g form-group" *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'">
+            <div class="ui-g-12 ui-md-12 right-align">
+                <span class="ui-float-label" *ngIf="actionAjouter ==
+                    'Immeuble'">
+
+                  <button icon="fa fa-pen" class="rougebutton" pButton
+                          label="Changer le prix des lits" type="button"
+                          (click)="changerPrixLits()">
+              </button>
+
+                    <button icon="fa fa-plus" class="rougebutton" pButton
+                            label="Ajouter
+                        un Bâtiment"
+                            type="button"
+                            (click)="addImmeuble()"></button>
+                </span>
+                <span class="ui-float-label" *ngIf="actionAjouter == 'Chambre'">
+
+          <button icon="fa fa-pen" class="rougebutton" pButton
+                  label="Changer le prix des boxes" type="button"
+                  (click)="changerPrixLits()">
+              </button>
+                    <button icon="fa fa-plus" class="rougebutton" pButton
+                            label="Ajouter
+                        une Chambre"
+                            type="button"
+                            (click)="addChambre()"></button>
+                </span>
+                <span class="ui-float-label" *ngIf="actionAjouter == 'Lit'">
+
+          <button icon="fa fa-pen" class="rougebutton" pButton
+                  label="Changer le prix des boxes" type="button"
+                  (click)="changerPrixLits()">
+              </button>
+                    <button icon="fa fa-plus" class="rougebutton" pButton
+                            label="Ajouter
+                        un Lit" type="button"
+                            (click)="saveLit()"></button>
+                </span>
+            </div>
+        </div>
+    </p-panel>
+</div>
+
+<p-dialog [(visible)]="litDisplay" showEffect="fade" [style]="{width: '50%'}" (onHide)="reset()">
+    <p-header> {{ action }} un Lit</p-header>
+    <div class="p-grid">
+        <div class="p-col-12">
+            <span class="ui-float-label">
+                <span class="foalting-label">Code Lit</span>
+            <input type="text" id="codeLit" value="" pInputText [(ngModel)]="codeLit">
+            </span>
+        </div>
+        <div class="p-col-8">
+        </div>
+        <div class="p-col-4" *ngIf="action=='Modifier'">
+            <span class="ui-float-label">
+                <p-selectButton [options]="optionsActivation"
+                                [(ngModel)]="litDisable" optionLabel="name"></p-selectButton>
+            </span>
+            <br>
+        </div>
+        <br><br>
+        <div class="p-col-12 right-align">
+            <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button" [disabled]="!codeLit" (click)="saveLit()"></button>
+            <button icon="fa fa-times" class="ui-button-raised rougebutton" pButton label="Fermer" type="button" (click)="closeLitDialog()"></button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="immeubleDisplay" showEffect="fade" [style]="{width:
+    '60%'}">
+    <p-header> {{ action }} un Bâtiment</p-header>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="foalting-label">Code Bâtiment</span>
+            <span class="ui-float-label">
+                <input type="text" id="codeImmeuble" value="" pInputText
+                       [(ngModel)]="codeImmeuble">
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-8">
+        </div>
+        <div class="ui-g-12 ui-md-4" *ngIf="action=='Modifier'">
+            <span class="ui-float-label">
+                <p-selectButton [options]="optionsActivation"
+                                [(ngModel)]="immeubleDisable" optionLabel="name"></p-selectButton>
+            </span>
+            <br>
+        </div>
+        <br>
+        <br>
+        <div class="ui-g-12 ui-md-12 right-align">
+            <button icon="fa fa-save" class="ui-button-raised
+                ui-button-secondary rougebutton" pButton label="Enregistrer" type="button" [disabled]="!codeImmeuble" (click)="saveImmeuble()"></button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="chambreDisplay" showEffect="fade" [style]="{width:
+    '40%'}">
+    <p-header> {{ action }} une Chambre</p-header>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="foalting-label">Code Chambre</span>
+            <span class="ui-float-label">
+                <input type="text" id="codeChambre" value="" pInputText
+                       [(ngModel)]="codeChambre">
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-12" *ngIf="action=='Ajouter'">
+            <span class="ui-float-label">
+                <span class="foalting-label">Nombre de lits</span>
+            <input type="number" id="prixLit" value="" pInputText [(ngModel)]="nbrLitsChambre" step="1" min="0" />
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <span class="foalting-label">Prix Unitaire du lit</span>
+            <input type="number" id="prixLit" value="" pInputText [(ngModel)]="prixUnitaireLit" step="1" min="1" />
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <span class="foalting-label">Prix Forfaitaire du lit</span>
+            <input type="number" id="prixLit" value="" pInputText [(ngModel)]="prixForfaitaireLit" step="10" min="10" />
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-8">
+        </div>
+        <div class="ui-g-12 ui-md-4" *ngIf="action=='Modifier'">
+            <span class="ui-float-label">
+                <p-selectButton [options]="optionsActivation"
+                                [(ngModel)]="chambreDisable" optionLabel="name"></p-selectButton>
+            </span>
+            <br>
+        </div>
+        <br>
+        <br>
+        <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="ui-button-raised
+                    ui-button-secondary rougebutton" pButton label="Enregistrer"
+                        type="button"
+                        [disabled]="!codeChambre"
+                        (click)="saveChambre()">
+                </button>
+                <button icon="fa fa-times" class="ui-button-raised rougebutton" pButton label="Fermer" type="button"
+                        (click)="closeChambreDialog()"></button>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="historiqueDisplay" showEffect="fade" [style]="{width:
+    '60%'}" (onHide)="closeHistoriqueDialog()">
+    <p-header>Historique de prix du Lit</p-header>
+    <br>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="prixActuel" class="ui-md-12" type="text" pInputText
+                       class="disabledinput" [(ngModel)]="prixActuel"/>
+                <label for="float-input">Prix actuel</label>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="dateDebut" class="ui-md-12" type="text" pInputText
+                       class="disabledinput" [(ngModel)]="dateDebutPrixActuel"/>
+                <label for="float-input">Date début</label>
+            </span>
+        </div>
+    </div>
+    <br>
+    <p-table [style]="{width: '70%', margin: '0 auto'}" [value]="prixLits" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Du</th>
+                <th>Au</th>
+                <th>Montant</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prixLit>
+            <tr>
+                <td style="text-align: center;">{{ prixLit?.dateDebut }}</td>
+                <td style="text-align: center;">{{ prixLit?.dateFin }}</td>
+                <td style="text-align: center;">{{ prixLit?.montant }} Dhs</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g-12 ui-md-12">
+        <span class="ui-float-label right-align">
+            <button icon="fa fa-times" class="ui-button-raised
+                rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeHistoriqueDialog()">
+            </button>
+        </span>
+    </div>
+
+</p-dialog>
+
+<p-dialog [(visible)]="historiqueNombreLitsDisplay" showEffect="fade" [style]="{width: '60%'}" (onHide)="closeNombreLitsHistoriqueDialog()">
+    <p-header>Historique du nombre des lits</p-header>
+    <br>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="nombreActuel" class="ui-md-12" type="text" pInputText
+                       class="disabledinput" [(ngModel)]="nombreActuel"/>
+                <label for="float-input">Nombre actuel</label>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="dateDebutNombreActuel" class="ui-md-12" type="text"
+                       pInputText
+                       class="disabledinput" [(ngModel)]="dateDebutNombreActuel"/>
+                <label for="float-input">Date début</label>
+            </span>
+        </div>
+    </div>
+    <br>
+    <p-table [style]="{width: '70%', margin: '0 auto'}" [value]="nombreLits" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Du</th>
+                <th>Au</th>
+                <th>Nombre</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-nombreLit>
+            <tr>
+                <td style="text-align: center;">{{ nombreLit?.dateDebut }}</td>
+                <td style="text-align: center;">{{ nombreLit?.dateFin }}</td>
+                <td style="text-align: center;">{{ nombreLit?.nombre }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="ui-button-raised
+                rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeNombreLitsHistoriqueDialog()"></button>
+        </span>
+    </div>
+
+</p-dialog>
+
+<p-dialog [(visible)]="changementPrixDisplay" showEffect="fade" [style]="{width: '45%'}" (onHide)="closeChangementPrixDialog()">
+    <p-header>Changement du prix</p-header>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+        <span class="foalting-label">Type Prix</span>
+            <p-dropdown id="test" [(ngModel)]="typePrixDropdown" [options]="typePrixList" [autoDisplayFirst]="false" [showClear]="false" [filter]="false" optionLabel="name" optionValue="code"></p-dropdown>
+            </span>
+            <br>
+        </div>
+
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+              <input type="number" id="montant" value="" pInputText [(ngModel)]="montant" step="5" min="10"/>
+                    <label>Montant</label>
+            </span>
+            <br>
+        </div>
+        <br><br>
+        <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button"
+                        [disabled]="!montant"
+                        (click)="savePrix()">
+                </button>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi
+    pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

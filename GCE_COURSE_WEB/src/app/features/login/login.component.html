@@ -1,0 +1,36 @@
+<div class="image">
+  <div class="p-grid p-nogutter p-justify-center p-align-center" style="height:100%">
+    <div class="centertest">
+      <div class="p-grid p-justify-center p-align-center">
+        <img src="assets/images/logo-original.png" alt="" width="200px" height="auto" style="opacity: 0.95;">
+        <div class="p-col-12">
+          <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon"><span class="fa
+                                fa-user"></span></span>
+            <input id="input-username" type="text" size="30" pInputText [(ngModel)]="userName"
+                   placeholder="Entrez votre login">
+          </div>
+        </div>
+        <div class="p-col-12">
+          <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon"><span class="fa
+                                fa-key"></span></span>
+            <input id="input-password" type="password" size="30" pInputText [(ngModel)]="password"
+                   (keyup.enter)="userName && password ? onClickLogin() : doNothing()"
+                   placeholder="Entrez votre mot de passe">
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="p-grid">
+        <div class="p-col-12 center">
+          <button pButton type="button" label="CONNEXION" class="ui-button-raised rougebutton" (click)="onClickLogin()"
+                  [disabled]="!userName || !password"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

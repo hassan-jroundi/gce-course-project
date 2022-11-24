@@ -1,0 +1,289 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+    <p-panel header="Recherche Cheval">
+        <div class="ui-g form-group">
+            <div class="ui-g-12 ui-md-12">
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="numTranspondeur" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="numeroTranspondeurSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">N° Transpondeur</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="numEsrima" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="numeroEsrimaSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">N° ESRIMA</label>
+                </span>
+                <br>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="nomCheval" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="nomSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">Nom cheval</label>
+                </span>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="nomProprietaire" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="proprioSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">Propriétaire</label>
+                </span>
+                <br>
+            </div>
+            <div class="ui-g-12 ui-md-12 right-align">
+                <span class="ui-float-label">
+                    <button icon="fa fa-search" class="ui-button-raised
+                        ui-button-secondary rougebutton" pButton
+                            label="Chercher"
+                            type="button"
+                            (click)="doSearch()"></button>
+                </span>
+            </div>
+        </div>
+    </p-panel>
+
+    <br>
+    <br>
+    <div class="card panel-secondary-header">
+        <p-panel header="Résultat">
+            <p-progressSpinner *ngIf="loading" [style]="{width: '30px', height:
+                '30px'}" styleClass="custom-spinner" strokeWidth="8" animationDuration=".9s"></p-progressSpinner>
+            <br>
+            <p-table *ngIf="tableDisplay" [value]="chevalList" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="nom" style="width: 230px">Nom cheval
+                          <p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="transpondeur" style="width: 230px">N° Transpondeur
+                          <p-sortIcon field="transpondeur"></p-sortIcon></th>
+                        <th pSortableColumn="numeroEsrima" style="width: 230px">N° ESRIMA
+                          <p-sortIcon field="numeroEsrima"></p-sortIcon></th>
+                        <th pSortableColumn="libelleEtat" style="width: 180px">Etat
+                            <p-sortIcon field="libelleEtat"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomEntraineur">Entraîneur
+                            <p-sortIcon field="nomEntraineur"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nomProprietaire">Propriétaire
+                            <p-sortIcon field="nomProprietaire"></p-sortIcon>
+                        </th>
+                        <th style="width: 110px"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cheval>
+                    <tr>
+                        <td>{{ cheval?.nom }}</td>
+                        <td>{{ cheval?.transpondeur }}</td>
+                        <td>{{ cheval?.numeroEsrima }}</td>
+                        <td *ngIf="cheval.libelleEtat == 'A l\'Entrainement'" style="background-color: rgb(120, 149, 48, 0.65); color:
+                            black;">{{ cheval?.libelleEtat }}</td>
+                        <td *ngIf="cheval.libelleEtat == 'Hors Entrainement'" style="background-color: rgb(151, 37, 19, 0.65); color:
+                            black;">{{ cheval?.libelleEtat }}</td>
+                        <td *ngIf="cheval.libelleEtat == 'Sortie d\'entrainement'" style="background-color: rgb(161, 145, 81, 0.65); color:
+                            black;">{{ cheval?.libelleEtat }}</td>
+                        <td *ngIf="cheval.libelleEtat == 'Sortie'" style="background-color: rgb(161, 145, 81, 0.65); color:
+                            black;">{{ cheval?.libelleEtat }}</td>
+                        <td>{{ cheval?.nomEntraineur }}</td>
+                        <td>{{ cheval?.nomProprietaire }}</td>
+                        <td class="align-center" style="text-align: center;">
+                            <span class="fa fa-search fa-lg pointer crud-buttons fa-orange-icon" title="Détails" (click)="detailsItem(cheval)"></span>&nbsp;&nbsp;
+                            <span class="fa fa-horse fa-lg pointer fa-vert-icon" title="Historique des réservations" (click)="historiqueReservationItem(cheval)"></span>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <br>
+        </p-panel>
+    </div>
+    <br>
+</div>
+
+<p-dialog [(visible)]="display" showEffect="fade" [style]="{width: action =='Ajouter' ? '60%' : '40%'}" (onHide)="closeDialog()">
+    <p-header> {{ action }} cheval</p-header>
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="numeroEsrima" value="" pInputText
+                       [(ngModel)]="numeroEsrima" class="disabledinput"/>
+                <span class="foalting-label">N° ESRIMA</span>
+            </span>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="numeroTranspondeur" value="" pInputText
+                       [(ngModel)]="numeroTranspondeur" class="disabledinput"/>
+                <span class="foalting-label">N° Transpondeur</span>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="nom" value="" pInputText
+                       [(ngModel)]="nom" class="disabledinput">
+                <span class="foalting-label">Nom</span>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="code" value="" pInputText
+                       [(ngModel)]="code" class="disabledinput">
+                <span class="foalting-label">Code</span>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span *ngIf="etat=='Sortie'" class="ui-float-label">
+                <input type="text" id="etat" value="" pInputText
+                       [(ngModel)]="etat" class="disabledinput">
+                <span class="foalting-label">Etat</span>
+            </span>
+            <span *ngIf="etat=='A l\'Entrainement'" class="ui-float-label">
+                <input type="text" id="etat" value="" pInputText
+                       [(ngModel)]="etat" class="disabledinput"
+                       style="background-color: rgb(120, 149, 48); color: white;
+                    font-weight: bold;">
+                <span class="foalting-label">Etat</span>
+            </span>
+            <span *ngIf="etat=='Hors Entrainement'" class="ui-float-label">
+                <input type="text" id="etat" value="" pInputText
+                       style="background-color: rgb(151, 37, 19); color: white;
+                    font-weight: bold;"
+                       [(ngModel)]="etat" class="disabledinput">
+                <span class="foalting-label">Etat</span>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="dateEtat" value="" pInputText
+                       [(ngModel)]="dateEtat" class="disabledinput">
+                <span class="foalting-label">Date état</span>
+            </span>
+        </div>
+
+        <div class="ui-g-12 ui-md-12">
+            <h3>ENTRAINEUR</h3>
+        </div>
+
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="text" id="nomEntraineur" value="" pInputText
+                       [(ngModel)]="nomEntraineur" class="disabledinput">
+                <span class="foalting-label">Nom complet</span>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-12">
+            <h3>PROPRIETAIRE</h3>
+        </div>
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="text" id="nomProprietaire" value="" pInputText
+                       [(ngModel)]="nomProprietaire" class="disabledinput">
+                <span class="foalting-label">Nom complet</span>
+            </span>
+        </div>
+        <br><br>
+        <div class="ui-g-12 ui-md-12 right-align" *ngIf="action == 'Ajouter'">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer"
+                        type="button"
+                        [disabled]="!numeroEsrima || !nom || !etat || !dateEtat"
+                        (click)="saveItem()">
+                </button>
+                <button icon="fa fa-undo" class="rougebutton" pButton
+                        label="Réinitialiser" type="button"
+                        (click)="reset()">
+                </button>
+                <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                        (click)="closeDialog()">
+                </button>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-12 right-align" *ngIf="action == 'Details'">
+            <span class="ui-float-label">
+                <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                        (click)="closeDialog()">
+                </button>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="listeSearchDisplay" showEffect="fade" [style]="{width: '65%'}" (onHide)="closeSelectionDialog()">
+    <p-header>Choix multiple</p-header>
+    <br>
+    <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="chevals" responsiveLayout="scroll" [paginator]="true" [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="nom">Nom
+                  <p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="numeroEsrima">N° ESRIMA
+                  <p-sortIcon field="numeroEsrima"></p-sortIcon></th>
+                <th pSortableColumn="etat">Etat
+                  <p-sortIcon field="etat"></p-sortIcon></th>
+                <th pSortableColumn="dateEtat">Date état
+                  <p-sortIcon field="dateEtat"></p-sortIcon></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cheval>
+            <tr>
+                <td>{{ cheval?.nom }}</td>
+                <td>{{ cheval?.numeroEsrima }}</td>
+                <td>{{ cheval?.etat }}</td>
+                <td>{{ cheval?.dateEtat | date:'fullDate' }}</td>
+                <td>(<a (click)="selectionner(cheval)">Sélectionner</a>)</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeSelectionDialog()"></button>
+        </span>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="historiqueReservationsDisplay" showEffect="fade" [style]="{width: '65%'}" (onHide)="closeHistoriqueReservationsDialog()">
+    <p-header>Historique des réservations</p-header>
+    <br>
+    <p-table [value]="reservations" responsiveLayout="scroll" [paginator]="true" [rows]="5">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>N°</th>
+                <th>Type</th>
+                <th>Du</th>
+                <th>Au</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-reservation>
+            <tr>
+                <td>{{ reservation?.id }}</td>
+                <td>{{ reservation?.type }}</td>
+                <td>{{ reservation?.dateDebut | date : "dd-MM-yyyy"}}
+                </td>
+                <td>{{ reservation?.dateFin | date : "dd-MM-yyyy"}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeHistoriqueReservationsDialog()"></button>
+        </span>
+    </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi
+    pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

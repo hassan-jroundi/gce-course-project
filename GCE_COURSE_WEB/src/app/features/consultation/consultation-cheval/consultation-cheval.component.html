@@ -1,0 +1,160 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+  <p-panel header="Recherche Cheval">
+    <div class="ui-g form-group right-align">
+      <div class="ui-g-12 ui-md-12">
+      </div>
+      <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="numTranspondeurSearch" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="numeroTranspondeurSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">N° Transpondeur</label>
+                </span>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="numEsrimaSearch" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="numeroEsrimaSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">N° ESRIMA</label>
+                </span>
+        <br>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <input id="nomChevalSearch" class="ui-md-12" type="text"
+                           pInputText [(ngModel)]="nomChevalSearch"
+                           (keyup.enter)="doSearch()"/>
+                    <label for="float-input">Nom Cheval</label>
+                </span>
+      </div>
+      <div class="ui-g-12 ui-md-12">
+        <br>
+        <br>
+        <br>
+        <br>
+        <span class="ui-float-label">
+                    <button icon="fa fa-search" class="rougebutton" pButton
+                            label="Chercher" type="button" (click)="doSearch()"></button>
+                </span>
+      </div>
+    </div>
+  </p-panel>
+
+  <div class="panel-secondary-header">
+    <p-panel header="Résultat" *ngIf="display">
+      <br>
+      <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-6">
+                    <span class="ui-float-label">
+                        <input id="nom" class="ui-md-12" type="text" pInputText
+                               class="disabledinput" [(ngModel)]="nomCheval"/>
+                        <span class="foalting-label">Nom cheval</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+                    <span class="ui-float-label">
+                        <input id="numEsrima" class="ui-md-12" type="text"
+                               class="disabledinput"
+                               pInputText [(ngModel)]="numeroEsrima"/>
+                        <span class="foalting-label">N° ESRIMA</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+                    <span class="ui-float-label">
+                        <input id="numTranspondeur" class="ui-md-12" type="text"
+                               class="disabledinput"
+                               pInputText [(ngModel)]="numeroTranspondeur"/>
+                        <span class="foalting-label">N° Transpondeur</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="etat == 'HENTR'">
+                    <span class="ui-float-label">
+                        <input id="libelleEtat" class="ui-md-12" type="text"
+                               class="disabledinput" style="background-color: rgb(151, 37, 19); color: white; font-weight: bold;"
+                               pInputText [(ngModel)]="libelleEtat"/>
+                        <span class="foalting-label">Etat</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="etat == 'AENTR'">
+                    <span class="ui-float-label">
+                        <input id="libelleEtat" class="ui-md-12" type="text"
+                               class="disabledinput" style="background-color: rgb(120, 149, 48); color: white; font-weight: bold;"
+                               pInputText [(ngModel)]="libelleEtat"/>
+                        <span class="foalting-label">Etat</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="etat == 'SORTI'">
+                    <span class="ui-float-label">
+                        <input id="libelleEtat" class="ui-md-12" type="text"
+                               class="disabledinput" style="background-color: rgb(125, 110, 52); color: white; font-weight: bold;"
+                               pInputText [(ngModel)]="libelleEtat"/>
+                        <span class="foalting-label">Etat</span>
+                    </span>
+        </div>
+      </div>
+      <br>
+      <p-tabView>
+        <p-tabPanel header="Hébergement" [headerStyle]="{'background-color':'white'}">
+          <div class="pagescheduler">
+            <app-calendar [nomCheval]="nomCheval" [nombreReservations]="nombreReservationsBox" [day]="day"
+                          [typeReservation]="typeReservationBox" [month]="month" [year]="year" [rooms]="roomsBox"
+                          [bookings]="bookingsBox" (changereservation)="onBoxReservationChanged($event)">
+            </app-calendar>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Entrainement" [headerStyle]="{'background-color':'white'}">
+          <div class="pagescheduler">
+            <app-calendar [nomCheval]="nomCheval" [nombreReservations]="nombreReservationsPiste" [day]="day"
+                          [typeReservation]="typeReservationPiste" [month]="month" [year]="year" [rooms]="roomsPiste"
+                          [bookings]="bookingsPiste" (changereservation)="onPisteReservationChanged($event)">
+            </app-calendar>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </p-panel>
+  </div>
+  <div class="ui-g-12 ui-md-12 center-align" *ngIf="display">
+        <span class="ui-float-label">
+            <button icon="fa fa-undo" class="rougebutton" pButton
+                    label="Réinitialiser" type="button"
+                    (click)="reset()"></button>
+        </span>
+  </div>
+</div>
+
+<p-dialog [(visible)]="selectionDisplay" showEffect="fade" [style]="{width: '65%'}" (onHide)="closeSelectionDialog()">
+  <p-header>Choix multiple</p-header>
+  <br>
+  <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="chevals" responsiveLayout="scroll" [paginator]="true"
+           [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>N° ESRIMA</th>
+        <th>N° Transpondeur</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cheval>
+      <tr>
+        <td>{{ cheval?.nom }}</td>
+        <td>{{ cheval?.numeroEsrima }}</td>
+        <td>{{ cheval?.numeroTranspondeur }}</td>
+        <td style="text-align: center;">(<a (click)="selectionner(cheval)">Sélectionner</a>)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton
+                    label="Fermer" type="button"
+                    (click)="closeSelectionDialog()"></button>
+        </span>
+  </div>
+</p-dialog>
+
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

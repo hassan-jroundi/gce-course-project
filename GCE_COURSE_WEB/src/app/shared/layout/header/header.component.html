@@ -1,0 +1,182 @@
+<div class="ng-header">
+  <div class="ng-header-left left">
+    <div class="toggle-menu-button left">
+      <a class="icon" (click)="toggleMenu()"><span class="fa fa-bars"></span></a>
+    </div>
+    <div class="logo right">
+      <img src="assets/images/logo-small.png" alt="">
+    </div>
+  </div>
+  <div class="ng-header-right right">
+    <div class="ng-header-right-item right" (click)="userdetails.toggle($event)">
+      <div class="user-name-header">{{ nomComplet | titlecase }}</div>
+      <a class="icon">
+        <span class="fa fa-user" style="color: white;"></span>
+      </a>
+    </div>
+    <div class="ng-header-right-item right" (click)="showNotificationSidebar()">
+      <a class="icon">
+        <span class="fa fa-bell" style="color: white;"></span>
+        <span class="badge" style="background-color: rgb(174,54,54);">{{ nombreNotifsNonLues }}</span>
+      </a>
+    </div>
+    <div class="ng-header-right-item right">
+      <a class="icon" (click)="logout()"><span class="fa fa-sign-out-alt"
+                                               style="color: white;"></span></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- user details overlay panel -->
+<p-overlayPanel #userdetails>
+  <div><strong>Site : </strong><span [innerHtml]="user.site.nom"></span></div>
+  <div><strong>Nom d'utilisateur: </strong><span [innerHtml]="user.login"></span></div>
+  <div><strong>Numéro : </strong><span [innerHtml]="user.id"></span></div>
+</p-overlayPanel>
+
+<!-- notifications sidebar -->
+<p-sidebar [(visible)]="displayNotifications" position="right">
+  <br>
+  <div class="notifications-header">
+    <h2>NOTIFICATIONS</h2>
+  </div>
+  <br>
+  <div *ngFor="let notification of notifications; let i=index" class="notification-message"
+       style="text-align: center; width: auto;">
+    <div *ngIf="notification?.dejaLu == false" id="something" style="cursor: pointer; text-align: center;"
+         (click)="onClick(notification)">
+      <strong><span [innerHtml]="notification.titre"></span></strong>
+      <br>
+      <br>
+      <span style="color: dodgerblue;"><strong>Cheval : </strong></span><span
+      [innerHtml]="notification.cheval.nom"></span>
+      <br>
+      <span style="color: dodgerblue;"><strong>Créé le : </strong></span><span
+      [innerHtml]="notification.createdOn | date:'dd/MM/yyyy'"></span>
+    </div>
+    <div *ngIf="notification?.dejaLu == true" id="something2" style="cursor: pointer; text-align: center;"
+         (click)="onClick(notification)">
+      <strong><span [innerHtml]="notification.titre"></span></strong>
+      <br>
+      <br>
+      <span style="color: dodgerblue;"><strong>Cheval : </strong></span><span
+      [innerHtml]="notification.cheval.nom"></span>
+      <br>
+      <span style="color: dodgerblue;"><strong>Créé le : </strong></span><span
+      [innerHtml]="notification.createdOn | date:'dd/MM/yyyy'"></span>
+    </div>
+    <br>
+  </div>
+  <div style="background-color:#f0f0f0; text-align: center; cursor: pointer;" (click)="afficherTout()">
+    <h3>Afficher tout</h3>
+  </div>
+</p-sidebar>
+
+<!-- theme chooser overlay panel -->
+<p-overlayPanel #themeChooser>
+  Select Theme:
+  <div class="ui-g">
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-teal')" style="background-color:
+                #427976;"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-rose')" style="background-color:
+                #79425a;"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-light')" style="background-color:
+                #cccccc"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-dark')" style="background-color:
+                #3b3b48"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme(
+                'theme-Turquoise')" style="background-color:#04838f;"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-green')" style="background-color:
+                #1e8455;"></button>
+    </div>
+    <div class="ui-g-3">
+      <button pButton type="button" (click)="selectTheme( 'theme-blue')" style="background-color:
+                #2d5394;"></button>
+    </div>
+  </div>
+</p-overlayPanel>
+
+<p-dialog [(visible)]="detailsNotificationDisplay" showEffect="fade" [style]="{width: '70%'}"
+          (onHide)="closeDetailsDialog()">
+  <p-header> Détails de la notification</p-header>
+  <div class="ui-g-12 ui-md-12">
+    <h3>SORTIE D'ENTRAINEMENT</h3>
+  </div>
+  <div>
+    <strong>Le : {{ notificationSelected?.createdOn | date :'dd/MM/yyyy'}}</strong>
+  </div>
+  <br>
+  <div style="text-align: left;">
+    <strong>{{ notificationSelected?.message }}</strong>
+  </div>
+  <br>
+  <div class="ui-g-12 ui-md-12">
+    <h3>RESERVATIONS EN COURS</h3>
+  </div>
+
+  <p-table [value]="chevalReservations" responsiveLayout="scroll" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>N°</th>
+        <th>Type</th>
+        <th>Du</th>
+        <th>Au</th>
+        <th style="width: 45px;"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-chevalReservation>
+      <tr>
+        <td>{{ chevalReservation?.id }}</td>
+        <td>{{ chevalReservation?.type }}</td>
+        <td *ngIf="chevalReservation?.chevalBoxs.length> 0">{{ chevalReservation?.dateDebut | date: "dd/MM/yyyy"}}
+        </td>
+        <td *ngIf="chevalReservation?.chevalPistes.length> 0">{{ chevalReservation?.dateDebut | date: "dd/MM/yyyy"}}
+        </td>
+        <td *ngIf="chevalReservation?.chevalBoxs.length> 0">{{ chevalReservation?.dateFin | date: "dd/MM/yyyy"}}
+        </td>
+        <td *ngIf="chevalReservation?.chevalPistes.length> 0">{{ chevalReservation?.dateFin | date: "dd/MM/yyyy"}}
+        </td>
+        <td class="align-center" style="text-align: center;"><span class="fa fa-trash pointer" style="color: brown; cursor:
+                        pointer;" (click)="deleteItem(chevalReservation)"></span></td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br><br>
+  <div class="right">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="ui-button-raised
+            rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeDetailsDialog()"></button><br><br>
+        </span>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="toutDisplay" showEffect="fade" [style]="{width: '60%'}" (onHide)="closeDialog()">
+  <p-orderList class="center" [value]="notifications" [style]="{width: '90%'}">
+    <ng-template let-notification pTemplate="item">
+      <div>
+        <div>{{ notification.message }} - {{ notification.createdOn | date: "dd/MM/yyyy"}}</div>
+      </div>
+    </ng-template>
+  </p-orderList>
+  <br><br>
+  <div class="right">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="ui-button-raised
+            rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeDialog()"></button><br><br>
+        </span>
+  </div>
+</p-dialog>

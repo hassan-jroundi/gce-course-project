@@ -1,0 +1,73 @@
+<div class="innerPanel">
+
+    <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <p-dropdown
+                    [options]="yearsList"
+                    [autoDisplayFirst]="false"
+                    [showClear]="true"
+                    [filter]="false"
+                    optionLabel="name"
+                    optionValue="code"
+                    name="years"
+                    id="years"
+                    (onChange)="onYearsChange($event)"
+                    [(ngModel)]="years"></p-dropdown>
+                <span class="foalting-label">Type</span>
+            </span>
+        </div>
+    </div>
+
+
+    <div>
+        <mat-form-field>
+            <mat-select name="years" [ngModel]="years" (selectionChange)="onYearsChange($event)">
+                <mat-option value="0">-- Toutes les années --</mat-option>
+                <mat-option value="2018">2018</mat-option>
+                <mat-option value="2019">2019</mat-option>
+                <mat-option value="2020">2020</mat-option>
+            </mat-select>
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field>
+            <mat-select name="months" [ngModel]="months" (selectionChange)="onMonthsChange($event)">
+                <mat-option value="0">-- Tous les mois --</mat-option>
+                <mat-option value="1">Janvier</mat-option>
+                <mat-option value="2">Février</mat-option>
+                <mat-option value="3">Mars</mat-option>
+                <mat-option value="4">Avril</mat-option>
+                <mat-option value="5">Mai</mat-option>
+                <mat-option value="6">Juin</mat-option>
+                <mat-option value="7">Juillet</mat-option>
+                <mat-option value="8">Août</mat-option>
+                <mat-option value="9">Septembre</mat-option>
+                <mat-option value="10">Octobre</mat-option>
+                <mat-option value="11">Novembre</mat-option>
+                <mat-option value="12">Décembre</mat-option>
+            </mat-select>
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field>
+            <input matInput placeholder="name" #fastsearch>
+        </mat-form-field>
+    </div>
+    <div>
+        <table>
+            <tr class="head">
+                <td>Id</td>
+                <td>Room</td>
+                <td>Start</td>
+                <td>End</td>
+                <td>Name</td>
+            </tr>
+            <tr class="rows" *ngFor="let person of persons$ | async" (click)="onSelect(person)">
+                <td class="tdId">{{ person.bookingId }}</td>
+                <td class="tdRoom">{{ person.roomNumber }} {{ person.roomTypeName }}</td>
+                <td class="tdDate">{{ person.startDate | date: 'dd/MM/yyyy' }}</td>
+                <td class="tdDate">{{ person.endDate | date: 'dd/MM/yyyy' }}</td>
+                <td class="tdName">{{ person.name }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,305 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="pagescheduler panel-default-header">
+  <p-panel header="Planning d'hébergement pour Personne">
+    <app-calendar [day]="day" [typeReservation]="typeReservation" [month]="month" [year]="year" [rooms]="rooms"
+                  [bookings]="bookings" (filterimmeublereservation)="onImmeubleReservationChanged($event)"
+                  (filtrechambrereservation)="onChambreReservationChanged($event)"
+                  (changereservation)="onReservationChanged($event)" (reservation)="onDayReservation($event)">
+    </app-calendar>
+  </p-panel>
+</div>
+
+<p-dialog [(visible)]="display" showEffect="fade" [style]="{width: '50%'}" (onHide)="closeReservationDialog()">
+  <p-header> {{ action }} une reservation</p-header>
+  <div class="ui-g form-group p-inputtext-sm">
+    <div class="ui-g-12 ui-md-12"></div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [disabled]="dateFinAnterieureADateSystem == false"
+                  [(ngModel)]="immeubleDropdown"
+                  [options]="immeubles"
+                  [autoDisplayFirst]="false"
+                  [filter]="false"
+                  optionLabel="nom"
+                  optionValue="id"
+                  (onChange)="onImmeubleChoosen($event)"></p-dropdown>
+                <span class="foalting-label">Bâtiment</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [disabled]="dateFinAnterieureADateSystem == false"
+                  id="tesst"
+                  [(ngModel)]="chambreDropdown"
+                  [options]="chambres"
+                  [autoDisplayFirst]="false"
+                  [filter]="false"
+                  optionLabel="nom"
+                  optionValue="id"
+                  (onChange)="onChambreChoosen($event)"></p-dropdown>
+                <span class="foalting-label">Chambres</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [disabled]="dateFinAnterieureADateSystem == false"
+                  id="tests"
+                  [(ngModel)]="litDropdown"
+                  [options]="lits"
+                  [autoDisplayFirst]="false"
+                  [showClear]="true"
+                  [filter]="false"
+                  optionLabel="nom"
+                  optionValue="id"></p-dropdown>
+                <span class="foalting-label">Lits</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-calendar [(ngModel)]="dateDebut" dateFormat="dd/mm/yy" [disabled]="dateFinAnterieureADateSystem == false"
+                            [disabledDates]="invalidDates" id="dateDebut" [minDate]="minDate"
+                            (ngModelChange)="onDateDebutChange($event)" showIcon="true"
+                            [readonlyInput]="true" (ngModelChange)="dateDebut= $event"></p-calendar>
+                <span class="foalting-label">Date début</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-calendar [(ngModel)]="dateFin" [disabledDates]="invalidDates" [disabled]="dateFinAnterieureADateSystem == false"
+                            id="dateFin" dateFormat="dd/mm/yy" [minDate]="minDateFin"
+                            (ngModelChange)="onDateFinChange($event)" showIcon="true"
+                            [readonlyInput]="true" (ngModelChange)="dateFin= $event"></p-calendar>
+                <span class="foalting-label">Date fin</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [disabled]="dateFinAnterieureADateSystem == false"
+                  id="test"
+                  [(ngModel)]="typePrixDrowdown"
+                  [options]="typePrixList"
+                  [autoDisplayFirst]="false"
+                  [showClear]="false"
+                  [filter]="false"
+                  optionLabel="name"
+                  optionValue="code"></p-dropdown>
+                <span class="foalting-label">Type Prix</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+      <h3>PERSONNE</h3>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="nomPersonneSearch" type="text"
+                       pInputText [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+                       (keyup.enter)="doPersonneSearch()"
+                       [(ngModel)]="nomPersonneSearch"/>
+                <span class="foalting-label">Nom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="prenomPersonneSearch" type="text"
+                       pInputText [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+                       (keyup.enter)="doPersonneSearch()"
+                       [(ngModel)]="prenomPersonneSearch"/>
+                <span class="foalting-label">Prenom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="cinPersonneSearch" type="text"
+                       pInputText [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+                       (keyup.enter)="doPersonneSearch()"
+                       [(ngModel)]="cinPersonneSearch"/>
+                <span class="foalting-label">CIN / N° Passeport</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label">
+                <input id="cinPersonneSearch" class="disabledinput" type="text" pInputText [(ngModel)]="nomEmployeur"/>
+                <span class="foalting-label">Employeur</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-2 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-edit" class="vertbutton" pButton
+                        *ngIf="personne != undefined && dateFinAnterieureADateSystem == true"
+                        label="Modifier" type="button"
+                        (click)="resetPersonneChoisie()">
+                </button>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+      <h3>PERSONNE A FACTURER</h3>
+    </div>
+
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [disabled]="personneAFacturer!=undefined"
+                  [options]="raisonSocialeList"
+                  [autoDisplayFirst]="false"
+                  [showClear]="true"
+                  [filter]="false"
+                  optionLabel="name"
+                  optionValue="code"
+                  name="raisonSociale"
+                  id="raisonSociale"
+                  (onChange)="onRaisonSocialeChange($event)"
+                  [(ngModel)]="typeRaisonSocialeSearch"></p-dropdown>
+                <span class="foalting-label">Type</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+            <span class="ui-float-label" *ngIf="choixRaisonSociale == 'P'">
+                <input id="nom" class="ui-md-12" type="text" pInputText [ngClass]="personneAFacturer!=undefined?'disabledinput':'enabledinput'"
+                       [(ngModel)]="nomSearch" (keyup.enter)="doSearch()"/>
+                <span class="foalting-label">Nom</span>
+            </span>
+      <span class="ui-float-label" *ngIf="choixRaisonSociale == 'A'">
+                <input id="cin" class="ui-md-12" type="text" pInputText [ngClass]="personneAFacturer!=undefined?'disabledinput':'enabledinput'"
+                       [(ngModel)]="designationSearch"
+                       (keyup.enter)="doSearch()"/>
+                <span class="foalting-label">Désignation</span>
+            </span>
+      <span class="ui-float-label" *ngIf="choixRaisonSociale == 'M'">
+                <input id="cin" class="ui-md-12" type="text" pInputText [ngClass]="personneAFacturer!=undefined?'disabledinput':'enabledinput'"
+                       [(ngModel)]="raisonSocialeSearch"
+                       (keyup.enter)="doSearch()"/>
+                <span class="foalting-label">Nom de la société</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-2">
+            <span class="ui-float-label right-align">
+                <button icon="fa fa-edit" class="vertbutton" pButton
+                        *ngIf="personneAFacturer != undefined && anterieureADateSystem == true"
+                        label="Modifier" type="button"
+                        (click)="resetPAFChoisi()">
+                </button>
+            </span>
+    </div>
+    <br *ngIf="choixRaisonSociale == 'M' || choixRaisonSociale == 'A' ||
+            !choixRaisonSociale">
+    <br *ngIf="choixRaisonSociale == 'M' || choixRaisonSociale == 'A' ||
+            !choixRaisonSociale">
+    <br *ngIf="choixRaisonSociale == 'M' || choixRaisonSociale == 'A' ||
+            !choixRaisonSociale">
+    <br *ngIf="choixRaisonSociale == 'M' || choixRaisonSociale == 'A' ||
+            !choixRaisonSociale">
+    <br *ngIf="choixRaisonSociale == 'M' || choixRaisonSociale == 'A' ||
+            !choixRaisonSociale">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label" *ngIf="choixRaisonSociale == 'P'">
+                <input id="prenom" class="ui-md-12" type="text" pInputText [ngClass]="personneAFacturer!=undefined?'disabledinput':'enabledinput'"
+                       [(ngModel)]="prenomSearch" (keyup.enter)="doSearch()"/>
+                <span class="foalting-label">Prénom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label" *ngIf="choixRaisonSociale == 'P'">
+                <input id="cin" class="ui-md-12" type="text" pInputText [ngClass]="personneAFacturer!=undefined?'disabledinput':'enabledinput'"
+                       [(ngModel)]="cinSearch" (keyup.enter)="doSearch()"/>
+                <span class="foalting-label">CIN / N° Passeport</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+      <h4 style="color: red;" *ngIf="personneAFacturer?.id != null &&
+            personneAFacturer?.email == null"><strong>Attention ! </strong><br>
+        <h4 style="color: black; font-style: normal;">Cette personne n'a pas une adresse mail renseignée. Merci de
+          transmettre l'information à l'équipe concernée pour ajouter une adresse pour la facturation.</h4>
+      </h4>
+    </div>
+    <div class="ui-g-12 ui-md-12 right-align">
+      <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button"
+              (click)="saveReservation()"></button>
+      <button icon="fas fa-hand-paper" class="rougebutton" *ngIf="action ==
+                'Modifier' && enCours == true" pButton label="Arrêter" type="button"
+              (click)="arreterReservation()"></button>
+      <button icon="fa fa-trash" class="rougebutton" *ngIf="action ==
+                'Modifier' && dateFinAnterieureADateSystem == true" pButton label="Supprimer" type="button" (click)="deleteReservation()"></button>
+      <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" (click)="closeReservationDialog()"
+              type="button"></button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="selectionDisplay" showEffect="fade" [style]="{width: '65%'}" (onHide)="closeSelectionDialog()">
+  <p-header>Choix multiple</p-header>
+  <br>
+  <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="personnes" responsiveLayout="scroll" [paginator]="true"
+           [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>CIN / N° Passeport</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-personne>
+      <tr>
+        <td>{{ personne?.nom }}</td>
+        <td>{{ personne?.prenom }}</td>
+        <td>{{ personne?.numeroPieceIdentite }}</td>
+        <td style="text-align: center;">(<a (click)="selectionner(personne)">Sélectionner</a>)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton
+                    label="Fermer" type="button"
+                    (click)="closeSelectionDialog()"></button>
+        </span>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="personneSelectionDisplay" showEffect="fade" [style]="{width: '65%'}"
+          (onHide)="closeSelectionDialog()">
+  <p-header>Choix multiple</p-header>
+  <br>
+  <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="personneAFacturers" responsiveLayout="scroll"
+           [paginator]="true" [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 25%;">Nom</th>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 25%;">Prenom</th>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 20%;">CIN / N° Passeport</th>
+        <th *ngIf="choixRaisonSociale == 'A'" style="width: 75%;">Désignation</th>
+        <th *ngIf="choixRaisonSociale == 'M'" style="width: 75%;">Nom de la société</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-personneAFacturer>
+      <tr>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer?.nom }}
+        </td>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer?.prenom }}</td>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer?.numeroPieceIdentite }}</td>
+        <td *ngIf="choixRaisonSociale == 'A'">{{ personneAFacturer?.designation }}</td>
+        <td *ngIf="choixRaisonSociale == 'M'">{{ personneAFacturer?.raisonSociale }}</td>
+        <td style="text-align: center;">(<a (click)="personneSelectionner(personneAFacturer)">Sélectionner</a>)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton
+                    label="Fermer" type="button"
+                    (click)="closeSelectionDialog()"></button>
+        </span>
+  </div>
+</p-dialog>
+
+<p-toast class="custom-toast" position="bottom-center"></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi
+    pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>

@@ -1,0 +1,258 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+  <p-panel header="Liste des écuries">
+    <br>
+    <div class="ui-g form-group">
+      <div class="ui-g-12 ui-md-4">
+                <span class="ui-float-label">
+                    <p-dropdown
+                      [options]="ecuries"
+                      [autoDisplayFirst]="false"
+                      [showClear]="true"
+                      [filter]="false"
+                      optionLabel="nom"
+                      optionValue="id"
+                      (onChange)="onEcurieChoosen($event)"></p-dropdown>
+                        <label>Ecurie</label>
+                </span>
+      </div>
+      <div class="ui-g-12 ui-md-2">
+        <span class="fa fa-pen fa-lg pointer crud-buttons fa-vert-icon center-i" title="Modifier"
+              *ngIf="ecurie && profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'"
+              (click)="editEcurie(ecurie)"></span>&nbsp;
+        <span class="fa fa-trash fa-lg pointer fa-rouge-icon center-i" title="Supprimer"
+              *ngIf="ecurie && profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'"
+              (click)="deleteEcurie(ecurie)"></span>
+      </div>
+      <div class="ui-g-12 ui-md-5"></div>
+      <div class="ui-g-12 ui-md-1">
+        <p-progressSpinner *ngIf="loading" [style]="{width: '30px', height:
+                '30px'}" styleClass="custom-spinner" strokeWidth="8" animationDuration=".9s"></p-progressSpinner>
+      </div>
+    </div>
+
+    <br>
+    <p-table [style]="{width: '70%', margin: '0 auto'}" *ngIf="tableDisplay" [value]="boxs" responsiveLayout="scroll"
+             [paginator]="true" [rows]="20" [resizableColumns]="true" [reorderableColumns]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Code Box</th>
+          <th>Statut</th>
+          <th>Prix Unitaire</th>
+          <th>Prix Forfaitaire</th>
+          <th *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'"
+              style="width: 130px;"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-box>
+        <tr>
+          <td style="text-align: center;">{{ box?.nom }}</td>
+          <td style="text-align: center;">{{ box?.isActif == true ? 'Activé' : 'Désactivé' }}</td>
+          <td style="text-align: center;"> {{ box?.prixUnitaire }} Dhs (<a (click)="getHistoriquePrixUnitaire(box)">Historique</a>)
+          </td>
+          <td style="text-align: center;"> {{ box?.prixForfaitaire }} Dhs (<a
+            (click)="getHistoriquePrixForfaitaire(box)">Historique</a>)
+          </td>
+          <td *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'" class="align-center"
+              style="text-align: center;">
+            <span class="fa fa-pen fa-lg pointer crud-buttons fa-vert-icon" title="Modifier"
+                  (click)="editItem(box)"></span>&nbsp;
+            <span class="fa fa-trash fa-lg pointer fa-rouge-icon" title="Supprimer" (click)="deleteItem(box)"></span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <br>
+    <br>
+    <div class="ui-g form-group" *ngIf="profilUtilisateurConnecte == 'ADM' || profilUtilisateurConnecte == 'GES'">
+      <div class="ui-g-12 ui-md-12 right-align">
+                <span class="ui-float-label">
+                    <button icon="fa fa-pen" class="rougebutton" pButton
+                          label="Changer le prix des boxes" type="button"
+                          (click)="changerPrixBoxes()">
+                    </button>
+                    <button *ngIf="actionAjouter == 'Box'" icon="fa fa-plus" class="rougebutton" pButton
+                            label="Ajouter un Box" type="button"
+                            (click)="ajouterBox()">
+                    </button>
+                    <button *ngIf="actionAjouter == 'Ecurie'" icon="fa fa-plus" class="rougebutton" pButton
+                            label="Ajouter une écurie" type="button"
+                            (click)="addEcurie()">
+                    </button>
+                </span>
+        <span class="ui-float-label">
+
+                </span>
+      </div>
+    </div>
+  </p-panel>
+</div>
+
+<p-dialog [(visible)]="boxDisplay" showEffect="fade" [style]="{width: '50%'}" (onHide)="reset()">
+  <p-header> {{ action }} un Box</p-header>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="text" id="codeBox" value="" pInputText
+                       [(ngModel)]="codeBox">
+                <label>Code Box</label>
+            </span>
+      <br>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="number" id="prixBox" value="" pInputText
+                       [(ngModel)]="prixUnitaireBox" step="1"/>
+                    <label>Prix Unitaire</label>
+            </span>
+      <br>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="number" id="prixBox" value="" pInputText
+                       [(ngModel)]="prixForfaitaireBox" step="10"/>
+                    <label>Prix Forfaitaire</label>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+    </div>
+    <div class="ui-g-12 ui-md-4" *ngIf="action=='Modifier'">
+            <span class="ui-float-label">
+                <p-selectButton [options]="optionsActivation" [(ngModel)]="boxDisable"
+                                optionLabel="name"></p-selectButton>
+            </span>
+      <br>
+    </div>
+    <br><br>
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button"
+                        [disabled]="!codeBox || !prixUnitaireBox || !prixForfaitaireBox"
+                        (click)="saveBox()">
+                </button>
+                <button icon="fa fa-times" class="ui-button-raised rougebutton" pButton label="Fermer" type="button"
+                        (click)="closeBoxDialog()"></button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="ecurieDisplay" showEffect="fade" [style]="{width: '45%'}" (onHide)="reset()">
+  <p-header> {{ action }} une Ecurie</p-header>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <input type="text" id="codeEcurie" value="" pInputText
+                       [(ngModel)]="codeEcurie">
+                    <label>Code Ecurie</label>
+            </span>
+      <br>
+    </div>
+    <br><br>
+    <div class="ui-g-12 ui-md-6">
+    </div>
+    <div class="ui-g-12 ui-md-6 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button"
+                        [disabled]="!codeEcurie"
+                        (click)="saveEcurie()">
+                </button>
+                <button icon="fa fa-undo" class="rougebutton" pButton label="Réinitialiser" type="button"
+                        (click)="reset()">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="historiqueDisplay" showEffect="fade" [style]="{width: '60%'}" (onHide)="closeHistoriqueDialog()">
+  <p-header>Historique de prix du Box</p-header>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="prixActuel" class="ui-md-12" type="text" pInputText class="disabledinput"
+                       [(ngModel)]="prixActuel"/>
+                <label>Prix actuel</label>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input id="dateDebut" class="ui-md-12" type="text" pInputText class="disabledinput"
+                       [(ngModel)]="dateDebutPrixActuel"/>
+                <label>Date début</label>
+            </span>
+    </div>
+  </div>
+  <br>
+  <p-table [style]="{width: '70%', margin: '0 auto'}" [value]="prixBoxs" responsiveLayout="scroll" [paginator]="true"
+           [rows]="10" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Du</th>
+        <th>Au</th>
+        <th>Montant</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-prixBox>
+      <tr>
+        <td style="text-align: center;">{{ prixBox?.dateDebut }}</td>
+        <td style="text-align: center;">{{ prixBox?.dateFin }}</td>
+        <td style="text-align: center;">{{ prixBox?.montant }} Dhs</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                    (click)="closeHistoriqueDialog()"></button>
+        </span>
+  </div>
+
+</p-dialog>
+
+<p-dialog [(visible)]="changementPrixDisplay" showEffect="fade" [style]="{width: '45%'}" (onHide)="closeChangementPrixDialog()">
+  <p-header>Changement du prix</p-header>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12">
+      <span class="ui-float-label">
+        <span class="foalting-label">Type Prix</span>
+                <p-dropdown
+                  id="test"
+                  [(ngModel)]="typePrixDropdown"
+                  [options]="typePrixList"
+                  [autoDisplayFirst]="false"
+                  [showClear]="false"
+                  [filter]="false"
+                  optionLabel="name"
+                  optionValue="code"></p-dropdown>
+            </span>
+      <br>
+    </div>
+
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+              <input type="number" id="montant" value="" pInputText [(ngModel)]="montant" step="5" min="10" />
+                    <label>Montant</label>
+            </span>
+      <br>
+    </div>
+    <br><br>
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton label="Enregistrer" type="button"
+                        [disabled]="!montant"
+                        (click)="savePrix()">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi
+                            pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

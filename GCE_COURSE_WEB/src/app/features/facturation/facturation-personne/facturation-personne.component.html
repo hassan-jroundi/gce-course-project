@@ -1,0 +1,699 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+  <p-panel header="Recherche Personne" [toggleable]="true" [collapsed]="panelInfosDisplay">
+    <div class="ui-g form-group">
+      <div class="ui-g-12 ui-md-12"></div>
+      <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label">
+                    <p-dropdown
+                      [options]="raisonSocialeList"
+                      [autoDisplayFirst]="false" [showClear]="true"
+                      [filter]="false" optionLabel="name" optionValue="code"
+                      name="raisonSociale" id="raisonSociale" [(ngModel)]="type"
+                      (onChange)="onRaisonSocialeChange($event)"></p-dropdown>
+                    <span class="foalting-label">Type</span>
+                </span>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+                <span class="ui-float-label" *ngIf="raisonSocialeCatched?.code=='P'">
+                    <input id="nom" class="ui-md-12" type="text" pInputText
+                           [(ngModel)]="nomSearch" (keyup.enter)="doSearch()"/>
+                    <span class="foalting-label">Nom</span>
+                </span>
+        <span class="ui-float-label" *ngIf="raisonSocialeCatched?.code=='A'">
+                    <input id="nom" class="ui-md-12" type="text" pInputText
+                           [(ngModel)]="designationSearch" (keyup.enter)="doSearch()"/>
+                    <span class="foalting-label">Désignation</span>
+                </span>
+        <span class="ui-float-label" *ngIf="raisonSocialeCatched?.code=='M'">
+                    <input id="nom" class="ui-md-12" type="text" pInputText
+                           [(ngModel)]="raisonSocialeSearch" (keyup.enter)="doSearch()"/>
+                    <span class="foalting-label">Nom de la société</span>
+                </span>
+      </div>
+
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+      <br *ngIf="choixRaisonSociale=='M' || choixRaisonSociale=='A' || !choixRaisonSociale">
+
+      <div class="ui-g-12 ui-md-6" *ngIf="raisonSocialeCatched?.code=='P'">
+                <span class="ui-float-label">
+                    <input id="prenom" class="ui-md-12" type="text" pInputText [(ngModel)]="prenomSearch" (keyup.enter)="doSearch()"/>
+                    <span class="foalting-label">Prénom</span>
+                </span>
+      </div>
+
+      <div class="ui-g-12 ui-md-6" *ngIf="raisonSocialeCatched?.code=='P'">
+                <span class="ui-float-label">
+                    <input id="cin" class="ui-md-12" type="text" pInputText [(ngModel)]="cinSearch" (keyup.enter)="doSearch()"/>
+                    <span class="foalting-label">CIN / N° Passeport</span>
+                </span>
+      </div>
+      <div class="ui-g-12 ui-md-6 left-align">
+        <p-progressSpinner *ngIf="loading" [style]="{width: '30px', height: '30px'}" styleClass="custom-spinner" strokeWidth="8" animationDuration=".9s">
+        </p-progressSpinner>
+      </div>
+      <div class="ui-g-12 ui-md-6 right-align">
+                <span class="ui-float-label">
+                    <button icon="fa fa-search" class="rougebutton" pButton (click)="doSearch()" label="Chercher" type="button"></button>
+                </span>
+      </div>
+    </div>
+  </p-panel>
+  <br>
+  <div class="panel-secondary-header">
+    <p-panel header="Informations de la personne" [toggleable]="true" *ngIf="panelInfosDisplay">
+      <div class="ui-g form-group">
+        <div class="ui-g-12 ui-md-4" *ngIf="choixRaisonSociale=='P'">
+                    <span class="ui-float-label" *ngIf="choixRaisonSociale=='P'">
+                        <input id="nom" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="nom"/>
+                        <span class="foalting-label">Nom</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="choixRaisonSociale=='A'">
+                    <span class="ui-float-label" *ngIf="choixRaisonSociale=='A'">
+                        <input id="designation" class="ui-md-12" type="text"
+                               pInputText
+                               style="pointer-events:none;"
+                               [(ngModel)]="designation"/>
+                        <span class="foalting-label">Désignation</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="choixRaisonSociale=='A'">
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="choixRaisonSociale=='M'">
+                    <span class="ui-float-label" *ngIf="choixRaisonSociale=='M'">
+                        <input id="raisonSociale" class="ui-md-12" type="text"
+                               pInputText
+                               style="pointer-events:none;"
+                               [(ngModel)]="raisonSociale"/>
+                        <span class="foalting-label">Nom de la société</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="choixRaisonSociale=='M'">
+                    <span class="ui-float-label">
+                        <input id="cin" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="nomGerant"
+                        />
+                        <span class="foalting-label">Nom du gérant</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-4" *ngIf="choixRaisonSociale=='P'">
+                    <span class="ui-float-label">
+                        <input id="prenom" class="ui-md-12" type="text"
+                               pInputText
+                               style="pointer-events:none;" [(ngModel)]="prenom"/>
+                        <span class="foalting-label">Prénom</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-4" *ngIf="choixRaisonSociale=='P'">
+                    <span class="ui-float-label">
+                        <input id="cin" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="cin"/>
+                        <span class="foalting-label">CIN / N° Passeport</span>
+                    </span>
+        </div>
+
+        <div class="ui-g-12 ui-md-3" *ngIf="choixRaisonSociale">
+                    <span class="ui-float-label">
+                        <input id="cin" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="email"/>
+                        <span class="foalting-label">Email</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-3" *ngIf="choixRaisonSociale">
+                    <span class="ui-float-label">
+                        <input id="cin" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="telephone"
+                        />
+                        <span class="foalting-label">N° Téléphone</span>
+                    </span>
+        </div>
+        <div class="ui-g-12 ui-md-6" *ngIf="choixRaisonSociale">
+                    <span class="ui-float-label">
+                        <input id="cin" class="ui-md-12" type="text" pInputText
+                               style="pointer-events:none;" [(ngModel)]="adresse"
+                        />
+                        <span class="foalting-label">Adresse</span>
+                    </span>
+        </div>
+      </div>
+      <br>
+    </p-panel>
+  </div>
+  <br>
+  <div class="panel-secondary-header">
+    <p-panel header="Liste des réservations" [toggleable]="true" *ngIf="panelInfosDisplay">
+      <br>
+      <div class="testosa">
+        <p-table [style]="{width: '98%', margin: '0 auto'}" [(selection)]="selectedReservations" dataKey="id"
+                 [paginator]="true" [rows]="7" [value]="reservations" sortMode="multiple">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 10%"></th>
+              <th pSortableColumn="numero">N° Réservation
+                <p-sortIcon field="numero"></p-sortIcon>
+              </th>
+              <th pSortableColumn="type">Type
+                <p-sortIcon field="type"></p-sortIcon>
+              </th>
+              <th pSortableColumn="dateDebut">Du
+                <p-sortIcon field="dateDebut"></p-sortIcon>
+              </th>
+              <th pSortableColumn="dateFin">Au
+                <p-sortIcon field="dateFin"></p-sortIcon>
+              </th>
+              <th pSortableColumn="nomConcerne">Personne / Cheval concerné
+                <p-sortIcon field="nomConcerne"></p-sortIcon>
+              </th>
+              <th pSortableColumn="statut">Statut
+                <p-sortIcon field="statut"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-reservation let-expanded="expanded">
+            <tr class="tr-facturation">
+              <td class="td-bolder">
+                <button type="button" style="background-color:rgb(151, 37, 19);
+                                    border: hidden;" pButton pRipple [pRowToggler]="reservation" class="p-button-text p-button-rounded
+                                    p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' :
+                                    'pi pi-chevron-right'"></button>
+              </td>
+              <td class="td-bolder">{{ reservation?.id }}</td>
+              <td class="td-bolder">{{ reservation?.type }}</td>
+              <td class="td-bolder"
+                  *ngIf="reservation?.type=='Entrainement Cheval'">{{ reservation?.dateDebut | date : 'dd/MM/yyyy, HH:00' }}</td>
+              <td class="td-bolder"
+                  *ngIf="reservation?.type !='Entrainement Cheval'">{{ reservation?.dateDebut | date : 'dd/MM/yyyy' }}</td>
+              <td class="td-bolder"
+                  *ngIf="reservation?.type =='Entrainement Cheval'">{{ reservation?.dateFin | date : 'dd/MM/yyyy, HH:00' }}</td>
+              <td class="td-bolder"
+                  *ngIf="reservation?.type !='Entrainement Cheval'">{{ reservation?.dateFin | date : 'dd/MM/yyyy' }}</td>
+              <td class="td-bolder">{{ reservation?.nomConcerne }}</td>
+              <td *ngIf="reservation?.libelleStatut == 'Payée'"
+                  class="td-bolder-payee">{{ reservation?.libelleStatut }}</td>
+              <td *ngIf="reservation?.libelleStatut == 'Non payée'"
+                  class="td-bolder-n-payee">{{ reservation?.libelleStatut }}</td>
+              <td *ngIf="reservation?.libelleStatut == 'Partiellement payée'"
+                  class="td-bolder-p-payee">{{ reservation?.libelleStatut }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-reservation style="border: hidden;">
+            <tr style="border: hidden;">
+              <td colspan="7" style="border: hidden;">
+                <div class="p-p-3" style="border: hidden;">
+                  <p-table [value]="reservation.detailReservations" dataKey="id" [style]="{width: '90%',
+                                        margin: '0 auto'}" [paginator]="true" [rows]="5"
+                           [(selection)]="selectedDetailReservations">
+                    <ng-template pTemplate="header">
+            <tr>
+              <th>Numéro</th>
+              <th>Du</th>
+              <th>Au</th>
+              <th>Statut</th>
+              <th>N° Facture</th>
+              <th style="width: 90px;"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-detailReservation>
+            <tr style="text-align: center;" class="tr-facturation-bis">
+              <td class="td-bolder">{{detailReservation?.id}}</td>
+              <td class="td-bolder">{{detailReservation?.dateDebut | date : 'dd/MM/yyyy' }}</td>
+              <td class="td-bolder">{{detailReservation?.dateFin | date : 'dd/MM/yyyy' }}</td>
+              <td class="td-bolder-payee"
+                  *ngIf="detailReservation?.libelleStatut == 'Payée'">{{detailReservation?.libelleStatut}}</td>
+              <td class="td-bolder-c-payee"
+                  *ngIf="detailReservation?.libelleStatut == 'En cours de paiement'">{{detailReservation?.libelleStatut}}</td>
+              <td class="td-bolder-n-payee"
+                  *ngIf="detailReservation?.libelleStatut == 'Non payée'">{{detailReservation?.libelleStatut}}</td>
+              <td class="td-bolder">{{detailReservation?.idFacture}}</td>
+              <td class="td-bolder">
+                <p-tableCheckbox *ngIf="detailReservation.libelleStatut == 'Non payée'" [value]="detailReservation"
+                                 style="width: 50px;">
+                </p-tableCheckbox>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      </td>
+      </tr>
+      </ng-template>
+      </p-table>
+  </div>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12 right-align">
+                    <span class="ui-float-label">
+                        <button icon="fa fa-file-invoice"
+                                class="rougebutton" pButton label="Facturer"
+                                type="button"
+                                [disabled]="!(selectedDetailReservations.length>
+                            0)" (click)="facturer(selectedDetailReservations)">
+                        </button>
+                    </span>
+    </div>
+  </div>
+  </p-panel>
+</div>
+<br>
+<div class="panel-secondary-header">
+  <p-panel header="Liste des factures" [toggleable]="true" *ngIf="panelInfosDisplay">
+    <br>
+    <p-table [style]="{width: '98%', margin: '0 auto'}" [paginator]="true" [rows]="10" dataKey="id" [value]="factures"
+             [(selection)]="selectedFactures">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">N° Facture
+            <p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="nomOperateur">Opérateur
+            <p-sortIcon field="nomOperateur"></p-sortIcon></th>
+          <th pSortableColumn="libelleModePaiement">Mode de paiement
+            <p-sortIcon field="libelleModePaiement"></p-sortIcon></th>
+          <th pSortableColumn="dateFacture">Date Facturation
+            <p-sortIcon field="dateFacture"></p-sortIcon></th>
+          <th pSortableColumn="datePaiement">Date Paiement
+            <p-sortIcon field="datePaiement"></p-sortIcon></th>
+          <th pSortableColumn="libelleStatut">Statut
+            <p-sortIcon field="libelleStatut"></p-sortIcon></th>
+          <th style="width: 10%;"></th>
+          <th style="width: 7%;"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-facture>
+        <tr style="text-align: center;" class="tr-facturation" [pSelectableRow]="facture">
+          <td class="td-bolder">{{ facture?.id }}</td>
+          <td class="td-bolder">{{ facture?.nomOperateur }}</td>
+          <td class="td-bolder">{{ facture?.libelleModePaiement }}</td>
+          <td class="td-bolder">{{ facture?.dateFacture | date : "dd-MM-yyyy" }}</td>
+          <td class="td-bolder">{{ facture?.datePaiement}}</td>
+          <td class="td-bolder-c-payee"
+              *ngIf="facture?.libelleStatut == 'En cours de paiement'">{{ facture?.libelleStatut }}</td>
+          <td class="td-bolder-payee" *ngIf="facture?.libelleStatut == 'Payée'">{{ facture?.libelleStatut }}</td>
+          <td class="td-bolder" style="text-align: center; width:
+                            10%;">
+            <span class="fa fa-search fa-lg pointer crud-buttons
+                                fa-orange-icon" title="Détails" (click)="detailsFacture(facture)"></span>&nbsp;&nbsp;
+            <span class="fa fa-download fa-lg pointer fa-vert-icon" (click)="telechargerFacture(facture)"></span>
+          </td>
+          <td class="td-bolder">
+            <p-tableCheckbox *ngIf="facture?.libelleStatut !=
+                                'Payée'" [value]="facture" style="width: 50px;">
+            </p-tableCheckbox>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <br>
+    <div class="ui-g form-group">
+      <div class="ui-g-12 ui-md-12 right-align">
+                    <span class="ui-float-label">
+                        <button class="rougebutton" pButton
+                                [disabled]="selectedFactures.length == 0"
+                                label="Mettre en payé" type="button"
+                                (click)="openModePaiementDisplay()">
+                        </button>
+                    </span>
+      </div>
+    </div>
+  </p-panel>
+</div>
+
+<br>
+<div class="ui-g form-group" *ngIf="panelInfosDisplay">
+  <div class="ui-g-12 ui-md-12 center-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-undo" class="rougebutton" pButton
+                    label="Réinitialiser" type="button"
+                    (click)="reset()">
+            </button>
+        </span>
+  </div>
+</div>
+
+<p-dialog [(visible)]="selectionDisplay" showEffect="fade" [style]="{width:'65%'}" (onHide)="closeSelectionDialog()">
+  <p-header>Choix multiple</p-header>
+  <br>
+  <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="personneAFacturers" responsiveLayout="scroll"
+           [paginator]="true" [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 25%;">Nom</th>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 25%;">Prenom</th>
+        <th *ngIf="choixRaisonSociale == 'P'" style="width: 20%;">CIN / N° Passeport</th>
+        <th *ngIf="choixRaisonSociale == 'A'" style="width: 75%;">Désignation</th>
+        <th *ngIf="choixRaisonSociale == 'M'" style="width: 75%;">Nom de la société</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-personneAFacturer>
+      <tr>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer.nom }}
+        </td>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer.prenom }}</td>
+        <td *ngIf="choixRaisonSociale == 'P'">{{ personneAFacturer.numeroPieceIdentite }}</td>
+        <td *ngIf="choixRaisonSociale == 'A'">{{ personneAFacturer.designation }}</td>
+        <td *ngIf="choixRaisonSociale == 'M'">{{ personneAFacturer.raisonSociale }}</td>
+        <td style="text-align: center;">(<a (click)="selectionner(personneAFacturer)">Sélectionner</a>)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+            <button icon="fa fa-times" class="rougebutton" pButton
+                    label="Fermer"
+                    type="button"
+                    (click)="closeSelectionDialog()"></button>
+        </span>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="detailsDisplay" showEffect="fade" [style]="{width:'60%'}" (onHide)="closeDetailsDialog()">
+  <p-header>Détails de la réservation</p-header>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="numeroReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="numeroReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">N° Réservation</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="typeReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="typeReservationDetail"
+                       style="pointer-events:none;"/>
+                <span class="foalting-label">Type Réservation</span>
+            </span>
+    </div>
+
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="datetime" id="dateDebutReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="dateDebutReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Du</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="dateFinReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="dateFinReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Au</span>
+            </span>
+    </div>
+
+    <div class="ui-g-12 ui-md-6" *ngIf="nombre == 'J'">
+            <span class="ui-float-label">
+                <input type="text" id="nbrJoursReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="nbrJoursReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Nombre de jours</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="nombre == 'H'">
+            <span class="ui-float-label">
+                <input type="text" id="nbrHeuresReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="nbrHeuresReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Nombre d'heures</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="nombre == 'J'">
+            <span class="ui-float-label">
+                <input type="text" id="prixJourReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="prixJourReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Prix par jour</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="nombre == 'H'">
+            <span class="ui-float-label">
+                <input type="text" id="prixHeureReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="prixHeureReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Prix par heure</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="montantReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="montantReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Montant de la facture</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="statutReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="statutReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Statut</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+    </div>
+
+    <div class="ui-g-12 ui-md-12" *ngIf="typeReservationCatchedDetail ==
+            'P'">
+      <h2 style="text-align: center; background-color: rgb(125, 110, 72);
+                color: white;">PERSONNE CONCERNEE</h2>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+      <h2 style="text-align: center; background-color: rgb(125, 110, 72);
+                color: white;" *ngIf="typeReservationCatchedDetail == 'C'">CHEVAL CONCERNE
+      </h2>
+    </div>
+
+    <div class="ui-g-12 ui-md-6" *ngIf="typeReservationCatchedDetail ==
+            'P'">
+            <span class="ui-float-label">
+                <input type="text" id="nomPersonneReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="nomPersonneReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Nom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeReservationCatchedDetail ==
+            'C'">
+            <span class="ui-float-label">
+                <input type="text" id="nomEntraineur" value="" pInputText
+                       [(ngModel)]="nomChevalReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Nom Cheval</span>
+            </span>
+    </div>
+
+    <div class="ui-g-12 ui-md-6" *ngIf="typeReservationCatchedDetail ==
+            'P'">
+            <span class="ui-float-label">
+                <input type="text" id="prenomPersonneReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="prenomPersonneReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Prénom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeReservationCatchedDetail ==
+            'C'">
+            <span class="ui-float-label">
+                <input type="text" id="numeroEsrimaChevalReservationDetail"
+                       value="" pInputText
+                       [(ngModel)]="numeroEsrimaChevalReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">N° ESRIMA</span>
+            </span>
+    </div>
+
+    <div class="ui-g-12 ui-md-6" *ngIf="typeReservationCatchedDetail ==
+            'P'">
+            <span class="ui-float-label">
+                <input type="text" id="cinPersonneReservationDetail" value=""
+                       pInputText
+                       [(ngModel)]="cinPersonneReservationDetail"
+                       style="pointer-events:none;">
+                <span class="foalting-label">CIN / N° Passeport</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+    </div>
+    <br><br>
+
+    <div class="ui-g-12 ui-md-12 right-align">
+      <br><br>
+      <span class="ui-float-label">
+                <button *ngIf="statutReservationDetail=='Payée'"
+                        class="vertbutton" pButton label="Télécharger
+                    la facture" type="button"
+                        (click)="telechargerFacture(numeroReservationDetail)">
+                </button>
+                <button *ngIf="statutReservationDetail!='Payée'" icon="fa
+                    fa-file-invoice" class="rougebutton" pButton
+                        label="Facturer" type="button"
+                        (click)="openModePaiementDisplay()">
+                </button>
+                <button icon="fa fa-times" class="rougebutton" pButton
+                        label="Fermer"
+                        type="button" (click)="closeDetailsDialog()">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="factureDetailsDisplay" showEffect="fade" [style]="{width:'75%'}"
+          (onHide)="closeFactureDetailsDialog()">
+  <p-header>Détails de la facture</p-header>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="numeroFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="numeroFactureDetails"
+                       style="pointer-events:none;">
+                <span class="foalting-label">N° Réservation</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="dateMiseEnFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="dateMiseEnFactureDetails"
+                       style="pointer-events:none;"/>
+                <span class="foalting-label">Date de mise en Facture</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="datetime" id="operateurFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="operateurFactureDetails"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Opérateur</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="modePaiementFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="modePaiementFactureDetails"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Mode de paiement</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="statutFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="statutFactureDetails"
+                       style="pointer-events:none;">
+                <span class="foalting-label">Statut</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label" *ngIf="statutFactureDetails ==
+                'Payée'">
+                <input type="text" id="datePaiementFactureDetails" value=""
+                       pInputText
+                       [(ngModel)]="datePaiementFactureDetails"
+                       style="pointer-events:none;"/>
+                <span class="foalting-label">Date de paiement</span>
+            </span>
+    </div>
+    <br><br>
+    <div class="ui-g-12 ui-md-12">
+      <h2 style="text-align: center; background-color: rgb(125, 110, 72);
+                color: white;">LISTE DES RESERVATIONS</h2>
+    </div>
+
+    <p-table [style]="{width: '98%', margin: '0 auto'}" [(selection)]="selectedReservationsFacture" dataKey="numero"
+             [value]="reservationFactures" [paginator]="true" [rows]="5" sortMode="multiple">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="numero">N° Réservation
+            <p-sortIcon field="numero"></p-sortIcon>
+          </th>
+          <th pSortableColumn="type">Type
+            <p-sortIcon field="type"></p-sortIcon>
+          </th>
+          <th pSortableColumn="dateDebut">Du
+            <p-sortIcon field="dateDebut"></p-sortIcon>
+          </th>
+          <th pSortableColumn="dateFin">Au
+            <p-sortIcon field="dateFin"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nomConcerne">Personne / Cheval concerné
+            <p-sortIcon field="nomConcerne"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-reservationFacture>
+        <tr style="text-align: center;">
+          <td>{{ reservationFacture?.id }}</td>
+          <td>{{ reservationFacture?.libelleTypeReservation }}</td>
+          <td
+            *ngIf="reservationFacture?.type=='Entrainement Cheval'">{{ reservationFacture?.dateDebut | date : 'MM/dd/yyyy, HH:00' }}</td>
+          <td
+            *ngIf="reservationFacture?.type !='Entrainement Cheval'">{{ reservationFacture?.dateDebut | date : 'MM/dd/yyyy' }}</td>
+          <td
+            *ngIf="reservationFacture?.type=='Entrainement Cheval'">{{ reservationFacture?.dateFin | date : 'MM/dd/yyyy, HH:00' }}</td>
+          <td
+            *ngIf="reservationFacture?.type !='Entrainement Cheval'">{{ reservationFacture?.dateFin | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ reservationFacture?.nomConcerne }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div class="ui-g-12 ui-md-12 right-align">
+      <br><br>
+      <span class="ui-float-label">
+                <button class="vertbutton" pButton label="Télécharger la facture" type="button" (click)="telechargerFacture(numeroReservationDetail)"></button>
+                <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button" (click)="closeFactureDetailsDialog()"></button>
+      </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="modePaiementDisplay" showEffect="fade" [style]="{width:'30%'}">
+  <p-header>Mode de paiement</p-header>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12">
+            <span class="ui-float-label">
+                <p-dropdown
+                  [options]="modePaiementList" [autoDisplayFirst]="false" [showClear]="true" [filter]="false" optionLabel="name" optionValue="code"
+                  name="raisonSociale" id="raisonSocialeBis" [(ngModel)]="modePaiementCatched"></p-dropdown>
+                <span class="foalting-label">Type</span>
+            <br><br><br><br><br>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-file-invoice"
+                        class="rougebutton" pButton label="Confirmer" type="button"
+                        [disabled]="!modePaiementCatched" (click)="mettreEnPayeFacture(selectedFactures)">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>

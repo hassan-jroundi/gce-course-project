@@ -1,0 +1,82 @@
+<div>
+
+    <div>
+        <app-calendarnavbar [day]="day" [month]="month" [year]="year" [statusbar]="statusbar" [manager]="manager" (changedays)="onDaysChanged($event)">
+        </app-calendarnavbar>
+    </div>
+
+    <div>
+        <br>
+        <div class="ui-g form-group" style="background:rgba(151, 145, 81, 0.28);">
+            <div class="ui-g-12 ui-md-2" *ngIf="typeReservation == 'box'">
+                <p-dropdown [ngModel]="ecurieChoosen" [options]="ecurieList" [autoDisplayFirst]="false" [filter]="false" dataKey="id" optionLabel="nom" optionValue="id" name="ecurieList" id="ecurieList" (onChange)="onEcurieChange($event)"></p-dropdown>
+                <span class="foalting-label">Ecuries</span>
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="typeReservation == 'box'">
+                <p-dropdown [options]="boxList" [(ngModel)]="boxChoosen" [autoDisplayFirst]="false" [filter]="false" optionLabel="nom" optionValue="id" name="boxList" id="boxList" (onChange)="onBoxChange($event)"></p-dropdown>
+                <span class="foalting-label">Boxs</span>
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="typeReservation == 'lit'">
+                <p-dropdown [ngModel]="immeubleChoosen" [options]="immeubleList" [autoDisplayFirst]="false" [filter]="false" optionLabel="nom" optionValue="id" name="immeubleList" id="immeubleList" (onChange)="onImmeubleChange($event)"></p-dropdown>
+                <span class="foalting-label">Bâtiments</span>
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="typeReservation == 'lit'">
+                <p-dropdown [ngModel]="chambreChoosen" [options]="chambreList" [autoDisplayFirst]="false" [filter]="false" optionLabel="nom" optionValue="id" name="chambreList" id="chambreList" (onChange)="onChambreChange($event)"></p-dropdown>
+                <span class="foalting-label">Chambres</span>
+            </div>
+            <div class="ui-g-12 ui-md-2" *ngIf="typeReservation == 'piste'">
+                <p-dropdown [options]="pisteList" [autoDisplayFirst]="false" [filter]="false" optionLabel="nom" optionValue="id" name="pisteList" id="pisteList" [(ngModel)]="pisteChoosen" (onChange)="onPisteChange($event)"></p-dropdown>
+                <span class="foalting-label">Pistes</span>
+            </div>
+            <div class="ui-g-12 ui-md-6" *ngIf="typeReservation == 'consultation lit'">
+                <strong class="nombre-reservation-text">La personne {{ nomPersonne }}
+                    a {{ nombreReservations}} réservation{{ nombreReservations > 1 ? 's' : '' }}.</strong>
+            </div>
+            <div class="ui-g-12 ui-md-6" *ngIf="typeReservation == 'consultation box'">
+                <strong class="nombre-reservation-text">Le cheval {{ nomCheval }} a
+                    {{ nombreReservations}} réservation{{ nombreReservations > 1 ? 's' : '' }}.</strong>
+            </div>
+            <div class="ui-g-12 ui-md-6" *ngIf="typeReservation == 'consultation piste'">
+                <strong class="nombre-reservation-text">Le cheval {{ nomCheval }} a
+                    {{ nombreReservations}} réservations.</strong>
+            </div>
+        </div>
+        <div class="example-container mat-elevation-z8">
+            <table class="tabreservation mat-elevation-z8">
+                <tr class="head">
+                    <td class="headEmpty">
+                    </td>
+                    <td class="headDaysA" *ngFor="let month of
+                        headerdays.months" [attr.colspan]="month.days" style="font-weight: bold; color: rgb(64, 63, 112);">
+                        {{ month.monthName }}
+                    </td>
+                </tr>
+                <tr class="head">
+                    <td class="headEmpty"></td>
+                    <td class="headDaysB" *ngFor="let dd of
+                        headerdays.headDays1" style="font-weight: bold; color:
+                        rgb(64, 63, 112);">
+                        {{ dd.day }}
+                    </td>
+                    <td class="headDaysB" *ngFor="let dd of
+                        headerdays.headDays2" style="font-weight: bold; color:
+                        rgb(64, 63, 112);">
+                        {{ dd.day }}
+                    </td>
+                </tr>
+                <tr class="rows" *ngFor="let room of rooms">
+                    <td class="rowRooms" style="font-weight: bold; color:
+                        rgb(64, 63, 112);">
+                        {{ room.roomNumber }}
+                    </td>
+                    <td *ngFor="let dd of headerdays.headDaysAll">
+                        <app-reservation [room]="room" [day]="dd" [bookings]="bookings" (changestatusbar)="onStatusbarChanged($event)" (reservation)="onDayReservation($event)">
+                        </app-reservation>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+</div>

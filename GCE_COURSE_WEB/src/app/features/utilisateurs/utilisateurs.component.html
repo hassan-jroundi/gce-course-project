@@ -1,0 +1,337 @@
+<app-header-breadcrumb></app-header-breadcrumb>
+
+<div class="card panel-default-header">
+  <div class="card panel-default-header">
+    <p-panel header="Liste des utilisateurs">
+      <br>
+      <p-table [value]="utilisateurs" responsiveLayout="scroll" [paginator]="true" [rows]="10" [resizableColumns]="true"
+               [reorderableColumns]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px">Identifiant</th>
+            <th style="width: 230px">Nom complet</th>
+            <th style="width: 140px">Login</th>
+            <th style="width: 140px">Type</th>
+            <th style="width: 130px">Etat</th>
+            <th style="width: 160px">Profil</th>
+            <th style="width: 110px"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-utilisateur>
+          <tr class="center-align tr-facturation">
+            <td class="td-bolder">{{ utilisateur?.id }}</td>
+            <td class="td-bolder">{{ utilisateur?.personne?.nom }} {{ utilisateur?.personne?.prenom }}</td>
+            <td class="td-bolder">{{ utilisateur?.login }}</td>
+            <td class="td-bolder">{{ utilisateur?.codeTypeUtilisateur == 'I' ? 'Interne' : 'Externe' }}</td>
+            <td class="td-bolder-active" *ngIf="utilisateur?.codeEtat == 'A'">Activé</td>
+            <td class="td-bolder-desactive" *ngIf="utilisateur?.codeEtat == 'D'">Désactivé</td>
+            <td class="td-bolder">{{ utilisateur?.profil?.designation }}</td>
+            <td class="align-center" style="text-align: center;">
+              <span class="fa fa-search fa-lg pointer crud-buttons fa-orange-icon" title="Détails"
+                 (click)="detailsItem(utilisateur)"></span>&nbsp;&nbsp;
+              <span class="fa fa-trash fa-lg pointer fa-rouge-icon" title="Supprimer"
+                 (click)="deleteItem(utilisateur)"></span>&nbsp;&nbsp;
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <br>
+    </p-panel>
+  </div>
+
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span class="ui-float-label">
+        <button icon="fa fa-plus" class="ui-button-raised
+          ui-button-secondary rougebutton" pButton label="Ajouter"
+                type="button"
+                (click)="addItem()">
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<p-dialog [(visible)]="display" showEffect="fade" [style]="{width: action
+  =='Ajouter' ? '60%' : '40%'}" (onHide)="closeDialog()">
+  <p-header> {{ action }} un utilisateur</p-header>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-12">
+      <h3>PERSONNE</h3>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+        <input id="nomPersonneSearch" type="text"
+               pInputText [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+               (keyup.enter)="doPersonneSearch()"
+               [(ngModel)]="nomPersonneSearch"/>
+        <span class="foalting-label">Nom</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <input id="prenomPersonneSearch" type="text"
+               pInputText [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+               (keyup.enter)="doPersonneSearch()"
+               [(ngModel)]="prenomPersonneSearch"/>
+        <span class="foalting-label">Prenom</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <input id="cinPersonneSearch" type="text" pInputText
+               (keyup.enter)="doPersonneSearch()" [ngClass]="personne!=undefined?'disabledinput':'enabledinput'"
+               [(ngModel)]="cinPersonneSearch"/>
+        <span class="foalting-label">CIN / N° Passeport</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-2 left-align">
+            <span class="ui-float-label">
+                <button icon="fa fa-edit" class="vertbutton" pButton
+                        *ngIf="personne != undefined"
+                        label="Modifier" type="button"
+                        (click)="resetPersonneChoisie()">
+                </button>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12">
+      <h3>INFORMATIONS DE CONNEXION</h3>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="typeUtilisateur"
+          [options]="typeUtilisateurList"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="name"
+          optionValue="code"
+          (onChange)="onTypeUtilisateurChoosen($event)"></p-dropdown>
+        <span class="foalting-label">Type utilisateur</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeUtilisateur != undefined">
+      <span class="ui-float-label">
+        <input type="text" id="login" value="" pInputText
+               [(ngModel)]="login">
+        <span class="foalting-label">Login</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeUtilisateur != undefined">
+      <span class="ui-float-label" *ngIf="typeUtilisateur.code == 'E'">
+        <input type="password" id="motDePasse" value="" pInputText
+               [(ngModel)]="motDePasse" />
+        <span class="foalting-label">Mot de passe</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeUtilisateur != undefined">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="profilDropdown"
+          [options]="profils"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="designation"
+          optionValue="id"
+          (onChange)="onProfilChoosen($event)">
+        </p-dropdown>
+        <span class="foalting-label">Profil</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="typeUtilisateur != undefined">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="siteDropdown"
+          [options]="sites"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="nom"
+          optionValue="id"
+          (onChange)="onSiteChoosen($event)"></p-dropdown>
+        <span class="foalting-label">Site</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-12 right-align">
+      <br><br><br>
+      <span class="ui-float-label">
+        <button icon="fa fa-save" class="ui-button-raised
+          ui-button-secondary rougebutton" pButton label="Enregistrer"
+                type="button"
+                (click)="saveItem()">
+        </button>
+        <button icon="fa fa-undo" class="rougebutton" pButton
+                label="Réinitialiser" type="button"
+                (click)="resetAjouterDialogInputs()">
+        </button>
+        <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                (click)="closeAjouterDialog()">
+        </button>
+      </span>
+    </div>
+  </div>
+  <br>
+</p-dialog>
+
+<p-dialog [(visible)]="selectionDisplay" showEffect="fade" [style]="{width:
+  '65%'}" (onHide)="closeSelectionDialog()">
+  <p-header>Choix multiple</p-header>
+  <br>
+  <p-table [style]="{width: '90%', margin: '0 auto'}" [value]="personnes" responsiveLayout="scroll" [paginator]="true"
+           [rows]="5" [resizableColumns]="true" [reorderableColumns]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>CIN / N° Passeport</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-personne>
+      <tr>
+        <td>{{ personne?.nom }}</td>
+        <td>{{ personne?.prenom }}</td>
+        <td>{{ personne?.numeroPieceIdentite }}</td>
+        <td style="text-align: center;">(<a (click)="selectionner(personne)">Sélectionner</a>)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br>
+  <div class="ui-g-12 ui-md-12 right-align">
+        <span class="ui-float-label">
+      <button icon="fa fa-times" class="rougebutton" pButton
+              label="Fermer" type="button"
+              (click)="closeSelectionDialog()"></button>
+    </span>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="detailsDisplay" showEffect="fade" [style]="{width: '55%'}" (onHide)="closeDetailsDialog()">
+  <p-header> Détails personne</p-header>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="idDetails" value="" pInputText class="disabledinput"
+                       [(ngModel)]="idDetails">
+                <span class="foalting-label">Identifiant</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="nomCompletDetails" value="" pInputText class="disabledinput"
+                       [(ngModel)]="nomCompletDetails">
+                <span class="foalting-label">Nom complet</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="typeUtilisateurDetails" value="" pInputText class="disabledinput"
+                       [(ngModel)]="typeUtilisateurDetails">
+                <span class="foalting-label">Type</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="text" id="loginDetails" value="" pInputText
+                       [(ngModel)]="loginDetails">
+                <span class="foalting-label">Login</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="profilDropdown"
+          [options]="profils"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="designation"
+          optionValue="id"
+          (onChange)="onProfilChoosen($event)">
+        </p-dropdown>
+        <span class="foalting-label">Profil</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="siteDropdown"
+          [options]="sites"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="nom"
+          optionValue="id"
+          (onChange)="onSiteChoosen($event)"></p-dropdown>
+        <span class="foalting-label">Site</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <span class="ui-float-label">
+        <p-dropdown
+          [(ngModel)]="etat"
+          [options]="etatList"
+          [autoDisplayFirst]="false"
+          [showClear]="false"
+          [filter]="false"
+          optionLabel="name"
+          optionValue="code"></p-dropdown>
+        <span class="foalting-label">Etat</span>
+      </span>
+    </div>
+    <div class="ui-g-12 ui-md-6"></div>
+    <div class="ui-g-12 ui-md-6" *ngIf="utilisateur?.codeTypeUtilisateur == 'E'">
+      <button icon="fa fa-key" class="vertbutton" pButton
+              label="Changer le mot de passe" type="button"
+              (click)="openPasswordDialog()">
+      </button>
+      <br/><br/><br/>
+    </div>
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span icon="fa fa-times" class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton
+                        label="Enregistrer" type="button"
+                        (click)="updateItem()">
+                </button>
+                <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                        (click)="closeDetailsDialog()">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="passwordDisplay" showEffect="fade" [style]="{width: '40%'}" (onHide)="closePasswordDialog()">
+  <p-header>Changer le mot de passe</p-header>
+  <br>
+  <div class="ui-g form-group">
+    <div class="ui-g-12 ui-md-6">
+            <span class="ui-float-label">
+                <input type="password" id="motDePasseChange" value="" pInputText
+                       [(ngModel)]="motDePasseChange">
+                <span class="foalting-label">Nouveau Mot de passe</span>
+            </span>
+    </div>
+    <div class="ui-g-12 ui-md-12 right-align">
+            <span icon="fa fa-times" class="ui-float-label">
+                <button icon="fa fa-save" class="rougebutton" pButton
+                        label="Enregistrer" type="button"
+                        (click)="changerMotDePasse()">
+                </button>
+                <button icon="fa fa-times" class="rougebutton" pButton label="Fermer" type="button"
+                        (click)="closePasswordDialog()">
+                </button>
+            </span>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi
+    pi-exclamation-triangle" acceptLabel="Oui" rejectLabel="Non"></p-confirmDialog>
+<p-toast class="custom-toast" position="bottom-center"></p-toast>
